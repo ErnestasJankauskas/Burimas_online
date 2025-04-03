@@ -1,0 +1,9 @@
+.form-signin {
+  max-width: 400px; /* Nustato maksimalų plotį */
+  margin: auto; /* Centruoja turinį */
+}
+
+body {
+  background-color: black;
+  color: white; /* Kad tekstas būtų matomas */
+}
