@@ -3,3 +3,7 @@
   padding: 15px;
   margin: auto;
 }
+body {
+  background-color: black;
+  color: white; /* Kad tekstas būtų matomas */
+}
