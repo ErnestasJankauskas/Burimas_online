@@ -1,64 +1,158 @@
-<!doctype html>
-<html class="no-js" lang="">
-
+<!DOCTYPE html>
+<html lang="lt">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <title>Šiurpus Būrimas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link rel="stylesheet" href="css/style.css">
-  <link href="
-https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
-" rel="stylesheet">
 
-  <meta name="description" content="">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      padding-top: 80px; /* kompensuoja fiksuotą header'į */
+    }
 
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: #000;
+      padding: 15px 20px;
+      box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
 
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.png">
+    .logo {
+      height: 40px;
+      margin-right: 10px;
+    }
 
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#fafafa">
+    .section-title {
+      font-size: 2rem;
+      margin-top: 1rem;
+    }
+
+    .content-box {
+      background-color: #222;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    .fixed-button {
+      position: fixed;
+      bottom: 10px;
+      right: 20px;
+      background-color: #ffc107;
+      color: black;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      z-index: 1050;
+    }
+
+    .ad img, .service img {
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .ad, .service {
+      margin-bottom: 20px;
+    }
+
+    .service-title {
+      margin-top: 10px;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
-
 <body>
-<div class="b-example-divider"></div>
 
-<header class="p-3 bg-dark text-white">
-  <div class="container">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-      </a>
+<!-- Header -->
+<header class="d-flex justify-content-between align-items-center">
+  <div class="d-flex align-items-center">
+    <img src="img/2.png" alt="Logo" class="logo">
+    <span class="fs-4">Paskyra</span>
+  </div>
+  <div class="text-center flex-grow-1">
+    <strong>Kontaktai: 69753845683</strong>
+  </div>
+  <div>
+    <span class="fs-5">Meniu</span>
+  </div>
+</header>
 
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-      </ul>
+<!-- Mygtukas apačioje dešinėje -->
+<button class="fixed-button">Prisijungti kaip svečias</button>
 
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-        <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-      </form>
+<!-- Main Content -->
+<div class="container text-center">
+  <p class="mt-3 fs-5">Galite išbandyti daugelį skirtingų ir patikimų būrimų</p>
 
-      <div class="text-end">
-        <button type="button" class="btn btn-outline-light me-2">Login</button>
-        <button type="button" class="btn btn-warning">Sign-up</button>
+  <div class="row">
+    <!-- Reklamos -->
+    <div class="col-md-3">
+      <div class="section-title">Reklamos</div>
+      <div class="ad">
+        <img src="img/reklama.png" alt="Reklama">
+      </div>
+    </div>
+
+    <!-- Paslaugos -->
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-6 service">
+          <img src="img/chiromantija.png" alt="Chiromantija">
+          <div class="service-title">Chiromantija</div>
+        </div>
+        <div class="col-md-6 service">
+          <img src="img/kortos.png" alt="Kortų būrimas">
+          <div class="service-title">Kortų būrimas</div>
+        </div>
+        <div class="col-md-6 service">
+          <img src="img/zodiakas.png" alt="Zodiako ženklų suderinamumas">
+          <div class="service-title">Ženklų suderinamumas</div>
+        </div>
+        <div class="col-md-6 service">
+          <img src="img/numerologija.png" alt="Numerologija">
+          <div class="service-title">Numerologija</div>
+        </div>
+        <div class="col-md-6 service">
+          <img src="img/horoskopas.png" alt="Horoskopas">
+          <div class="service-title">Horoskopas</div>
+        </div>
+        <div class="col-md-6 service">
+          <img src="img/sapnai.png" alt="Sapnų reikšmės">
+          <div class="service-title">Sapnų reikšmės</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Naujienos -->
+    <div class="col-md-3">
+      <div class="section-title">Naujienos</div>
+      <div class="content-box">
+        <p><strong>Tampk Prenumeratoriumi !!</strong></p>
+        <h2>Nuolaidos iki 50%</h2>
+        <p><em>Greitas Prisijungimas</em></p>
       </div>
     </div>
   </div>
-</header>
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
-  <script src="js/app.js"></script>
+
+  <footer class="mt-4">
+    <p>Šiurpus Būrimas.com</p>
+  </footer>
+</div>
 
 </body>
-
 </html>
