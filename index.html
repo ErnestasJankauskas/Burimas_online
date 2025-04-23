@@ -45,7 +45,7 @@
       position: fixed;
       bottom: 10px;
       right: 20px;
-      background-color: #ffc107;
+      background-color: #ffffff;
       color: black;
       padding: 10px 15px;
       border: none;
@@ -56,6 +56,8 @@
 
     .ad img, .service img {
       width: 100%;
+      height: 200px;
+      object-fit: cover;
       border-radius: 5px;
     }
 
@@ -65,8 +67,10 @@
 
     .service-title {
       margin-top: 10px;
+    }
+
+    .service-title .btn {
       font-size: 1rem;
-      text-align: center;
     }
 
     footer {
@@ -79,21 +83,21 @@
 <body>
 
 <!-- Header -->
+<!-- Header -->
 <header class="d-flex justify-content-between align-items-center">
   <div class="d-flex align-items-center">
     <img src="img/2.png" alt="Logo" class="logo">
-    <span class="fs-4">Paskyra</span>
+    <button class="btn btn-light btn-sm">Paskyra</button>
   </div>
+
   <div class="text-center flex-grow-1">
-    <strong>Kontaktai: 69753845683</strong>
+    <strong>Kontaktai: SiurpusBurimas@gmail.com</strong>
   </div>
   <div>
-    <span class="fs-5">Meniu</span>
+    <button class="btn btn-light">Meniu</button>
   </div>
 </header>
 
-<!-- Mygtukas apačioje dešinėje -->
-<button class="fixed-button">Prisijungti kaip svečias</button>
 
 <!-- Main Content -->
 <div class="container text-center">
@@ -113,30 +117,43 @@
       <div class="row">
         <div class="col-md-6 service">
           <img src="img/chiromantija.jpg" alt="Chiromantija">
-          <div class="service-title">Chiromantija</div>
+          <div class="service-title">
+            <button class="btn btn-light w-100">Chiromantija</button>
+          </div>
         </div>
         <div class="col-md-6 service">
           <img src="img/kortos.png" alt="Kortų būrimas">
-          <div class="service-title">Kortų būrimas</div>
+          <div class="service-title">
+            <button class="btn btn-light w-100">Kortų būrimas</button>
+          </div>
         </div>
         <div class="col-md-6 service">
           <img src="img/zodiakas.png" alt="Zodiako ženklų suderinamumas">
-          <div class="service-title">Ženklų suderinamumas</div>
+          <div class="service-title">
+            <button class="btn btn-light w-100">Ženklų suderinamumas</button>
+          </div>
         </div>
         <div class="col-md-6 service">
           <img src="img/numerologija.png" alt="Numerologija">
-          <div class="service-title">Numerologija</div>
+          <div class="service-title">
+            <button class="btn btn-light w-100">Numerologija</button>
+          </div>
         </div>
         <div class="col-md-6 service">
           <img src="img/horoskopas.png" alt="Horoskopas">
-          <div class="service-title">Horoskopas</div>
+          <div class="service-title">
+            <button class="btn btn-light w-100">Horoskopas</button>
+          </div>
         </div>
         <div class="col-md-6 service">
           <img src="img/sapnai.png" alt="Sapnų reikšmės">
-          <div class="service-title">Sapnų reikšmės</div>
+          <div class="service-title">
+            <button class="btn btn-light w-100">Sapnų reikšmės</button>
+          </div>
         </div>
-      </div>
-    </div>
+      </div> <!-- Čia įdėtas trūkstamas -->
+    </div>   <!-- Ir čia -->
+
 
     <!-- Naujienos -->
     <div class="col-md-3">
@@ -153,6 +170,7 @@
     <p>Šiurpus Būrimas.com</p>
   </footer>
 </div>
+
 
 </body>
 </html>
