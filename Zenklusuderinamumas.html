@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ženklų suderinamumas</title>
+  <style>
+    body {
+      background-color: #322E39;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #C8ACA5;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      width: 200px;
+    }
+
+    .main-button {
+      background-color: #9B507B;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      animation: glow 2s infinite alternate;
+      margin-top: 20px;
+    }
+
+    .main-button:hover {
+      background-color: #C8ACA5;
+      color: #322E39;
+    }
+
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 10px #9B507B, 0 0 20px #9B507B;
+      }
+      to {
+        box-shadow: 0 0 20px #C8ACA5, 0 0 30px #C8ACA5;
+      }
+    }
+
+    .return-container {
+      position: relative;
+      margin-top: 40px;
+    }
+
+    .return-button {
+      background-color: #C8ACA5;
+      color: #322E39;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 10px;
+    }
+
+    .return-container:hover .return-button {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #C8ACA5;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #result.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Ženklų suderinamumas</h1>
+
+<div>
+  <input type="text" placeholder="Tavo ženklas" id="sign1">
+  <input type="text" placeholder="Partnerio ženklas" id="sign2">
+</div>
+
+<!-- Magical glowing button -->
+<button class="main-button" onclick="checkCompatibility()">🔮 Patikrinti suderinamumą</button>
+
+<div id="result"></div>
+
+<!-- Separated hover-revealed return button -->
+<div class="return-container" onmouseenter="showReturnButton()" onmouseleave="scheduleHideReturnButton()">
+  <span style="color: #C8ACA5;">Užveskite čia norėdami grįžti:</span>
+  <button id="return-button" class="return-button" onclick="location.href='index.html'">Eiti į pagrindinį puslapį</button>
+</div>
+
+
+<script>
+  function checkCompatibility() {
+    const sign1 = document.getElementById('sign1').value.trim();
+    const sign2 = document.getElementById('sign2').value.trim();
+    const resultEl = document.getElementById('result');
+
+    if (!sign1 || !sign2) {
+      resultEl.textContent = "Prašome įvesti abu ženklus.";
+      resultEl.classList.add("visible");
+      return;
+    }
+
+    const messages = [
+      `💖 ${sign1} ir ${sign2} – ypatingas ryšys kupinas aistros ir žavesio!`,
+      `🔮 ${sign1} ir ${sign2} – paslaptinga, bet harmoninga sąjunga. Žvaigždės palankios!`,
+      `⚡️ ${sign1} ir ${sign2} gali susidurti su iššūkiais, bet truputis magijos gali padėti!`
+    ];
+
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+
+    resultEl.textContent = randomMsg;
+    resultEl.classList.remove("visible"); // reset
+    void resultEl.offsetWidth; // force reflow
+    resultEl.classList.add("visible");
+  }
+
+  let hideTimeout;
+
+  function showReturnButton() {
+    clearTimeout(hideTimeout);
+    document.getElementById('return-button').style.opacity = '1';
+    document.getElementById('return-button').style.pointerEvents = 'auto';
+  }
+
+  function scheduleHideReturnButton() {
+    hideTimeout = setTimeout(() => {
+      document.getElementById('return-button').style.opacity = '0';
+      document.getElementById('return-button').style.pointerEvents = 'none';
+    }, 1500); // stay visible for 1.5 seconds after mouse leaves
+  }
+
+</script>
+
+</body>
+</html>
