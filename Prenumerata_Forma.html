@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <title>Prenumeratos Forma</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      padding-top: 50px;
+      font-family: Arial, sans-serif;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #222;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .btn-main {
+      background-color: white;
+      color: black;
+      font-weight: bold;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      margin-top: 20px;
+    }
+
+    .btn-main:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+<div class="form-container">
+  <h2>Prenumeratos forma</h2>
+  <form id="subscriptionForm">
+    <label for="name">Vardas</label>
+    <input type="text" id="name" class="form-control" required>
+
+    <label for="surname">Pavardė</label>
+    <input type="text" id="surname" class="form-control" required>
+
+    <label for="email">El. paštas</label>
+    <input type="email" id="email" class="form-control" required>
+
+    <label for="address">Adresas</label>
+    <input type="text" id="address" class="form-control" required>
+
+    <label for="bank">Pasirinkite banką</label>
+    <select id="bank" class="form-control" required>
+      <option value="">-- Pasirinkite banką --</option>
+      <option value="seb">SEB</option>
+      <option value="swedbank">Swedbank</option>
+      <option value="luminor">Luminor</option>
+      <option value="citadele">Citadele</option>
+    </select>
+
+    <p class="mt-3">Prenumeratos kaina: <strong>5 € / mėn.</strong></p>
+
+    <button type="submit" class="btn-main">Tęsti mokėjimą</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById("subscriptionForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("Prenumerata pateikta! Ačiū, kad prisijungėte.");
+    window.location.href = "Pagrindinis_puslapis.html";
+  });
+</script>
+</body>
+</html>
