@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dream Interpreter</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0b0b0f;
+      color: #e8dbc5;
+    }
+
+    h1 {
+      text-align: center;
+      color: #C8ACA5;
+      font-size: 2.5rem;
+    }
+
+    input[type="text"] {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 60%;
+      border: 0px solid #C8ACA5;
+      background-color: rgba(155, 80, 123, 0.2);
+      color: #e8dbc5;
+      border-radius: 6px;
+    }
+
+    .index {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem;
+      margin: 1rem 0;
+    }
+
+    .index button {
+      background: none;
+      border: 1px solid #7a3e62;
+      color: #C8ACA5;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .keyword-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .keyword {
+      border: 1px solid #9B507B;
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: rgba(155, 80, 123, 0.2);
+    }
+
+    .keyword.selected {
+      background-color: #C8ACA5;
+      color: #0b0b0f;
+    }
+
+    .selected-list {
+      text-align: center;
+      font-style: italic;
+      color: #C8ACA5;
+      margin-bottom: 1rem;
+    }
+
+    .reveal-zone {
+      height: 40px;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .reveal-zone:hover #submit-btn {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #submit-btn {
+      opacity: 0;
+      transition: opacity 0.8s ease, background 0.3s ease;
+      pointer-events: none;
+      margin: 0 auto;
+      padding: 0.5rem 1rem;
+      background-color: #9B507B;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    #submit-btn:hover {
+      background-color: #C8ACA5;
+      color: #322E39;
+    }
+
+    .results {
+      margin-top: 2rem;
+      border-top: 1px solid rgba(155, 80, 123, 0.2);
+      padding-top: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .results div {
+      margin: 1rem auto;
+      padding: 1.5rem;
+      max-width: 600px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid #C8ACA5;
+      text-align: center;
+      font-size: 1.3rem;
+    }
+
+    .history {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .history-title {
+      color: #C8ACA5;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .history-entry {
+      margin: 0.5rem auto;
+      padding: 1rem;
+      max-width: 500px;
+      background-color: rgba(155, 80, 123, 0.2);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    #back-btn {
+      margin: 2rem auto 0;
+      display: block;
+      padding: 0.5rem 1rem;
+      background-color: #9B507B;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #back-btn:hover {
+      background-color: #C8ACA5;
+      color: #322E39;
+    }
+  </style>
+</head>
+<body>
+<h1>Sapnų Aiškinimas</h1>
+<input type="text" id="search" placeholder="Ieškoti sapno simbolių..." />
+
+<div class="index" id="index">
+  <button id="all-btn">Visi</button>
+</div>
+<div class="keyword-list" id="keywords"></div>
+<div class="selected-list" id="selected-list"></div>
+
+<div class="reveal-zone">
+  <button id="submit-btn">Rodyti Aiškinimus</button>
+</div>
+
+<div class="results" id="results"></div>
+<button id="back-btn" style="display:none">Grįžti į Pradžią</button>
+
+<div class="history" id="history">
+  <div class="history-title">Ankstesni tyrimai</div>
+</div>
+
+<script>
+  const keywordsData = {
+    A: [
+      { word: 'Angelas', meaning: 'Apsaugos, vadovavimo arba dvasinio prabudimo ženklas.' }
+    ],
+    B: [
+      { word: 'Balionas', meaning: 'Viltis, šventė arba paleidimas.' }
+    ],
+    D: [
+      { word: 'Durys', meaning: 'Naujos galimybės arba naujos pradžios slenkstis.' },
+      { word: 'Drakonas', meaning: 'Galia, baimė arba vidinė stiprybė.' }
+    ],
+    G: [
+      { word: 'Gyvatė', meaning: 'Transformacija, paslėptos baimės arba gijimas.' }
+    ],
+    L: [
+      { word: 'Lėktuvas', meaning: 'Kelionė, ambicijos arba noras pakilti virš kasdienybės.' }
+    ],
+    P: [
+      { word: 'Pilis', meaning: 'Troškimas apsaugai, pasiekimams arba fantazijai.' }
+    ],
+    V: [
+      { word: 'Veidrodis', meaning: 'Savo atspindys, vidinė tiesa arba savianalizė.' }
+    ],
+    T: [
+      { word: 'Tiltas', meaning: 'Perėjimas arba ryšys tarp dviejų gyvenimo etapų.' },
+    ],
+    Ž: [
+      { word: 'Žvakė', meaning: 'Vidinė šviesa, viltis arba dvasinis supratimas.' },
+      { word: 'Žvaigždė', meaning: 'Viltis, dieviškas vadovavimas arba likimas.' }
+    ]
+  };
+
+  const indexEl = document.getElementById('index');
+  const keywordsEl = document.getElementById('keywords');
+  const searchEl = document.getElementById('search');
+  const resultsEl = document.getElementById('results');
+  const submitBtn = document.getElementById('submit-btn');
+  const selectedListEl = document.getElementById('selected-list');
+  const historyEl = document.getElementById('history');
+  const backBtn = document.getElementById('back-btn');
+
+  let selectedKeywords = [];
+
+  document.getElementById('all-btn').onclick = () => {
+    renderKeywords(Object.values(keywordsData).flat());
+  };
+
+  for (let char of Object.keys(keywordsData).sort()) {
+    const btn = document.createElement('button');
+    btn.textContent = char;
+    btn.onclick = () => {
+      renderKeywords(keywordsData[char]);
+    };
+    indexEl.appendChild(btn);
+  }
+
+  function updateSelectedList() {
+    selectedListEl.textContent = selectedKeywords.length > 0
+      ? selectedKeywords.join(', ')
+      : '';
+  }
+
+  function renderKeywords(list) {
+    keywordsEl.innerHTML = '';
+    keywordsEl.style.display = 'flex';
+    list.forEach(({ word }) => {
+      const div = document.createElement('div');
+      div.className = 'keyword';
+      div.textContent = word;
+      if (selectedKeywords.includes(word)) {
+        div.classList.add('selected');
+      }
+      div.onclick = () => {
+        div.classList.toggle('selected');
+        if (selectedKeywords.includes(word)) {
+          selectedKeywords = selectedKeywords.filter(w => w !== word);
+        } else {
+          selectedKeywords.push(word);
+        }
+        updateSelectedList();
+      };
+      keywordsEl.appendChild(div);
+    });
+  }
+
+  searchEl.oninput = () => {
+    const term = searchEl.value.toLowerCase();
+    const matches = [];
+    for (const group of Object.values(keywordsData)) {
+      for (const entry of group) {
+        if (entry.word.toLowerCase().includes(term)) {
+          matches.push(entry);
+        }
+      }
+    }
+    renderKeywords(matches);
+  };
+
+  renderKeywords(Object.values(keywordsData).flat());
+
+  submitBtn.onclick = () => {
+    resultsEl.innerHTML = '';
+    const results = [];
+    for (const group of Object.values(keywordsData)) {
+      for (const entry of group) {
+        if (selectedKeywords.includes(entry.word)) {
+          results.push(entry);
+        }
+      }
+    }
+    if (results.length > 0) {
+      results.forEach(({ word, meaning }) => {
+        const div = document.createElement('div');
+        div.innerHTML = `<strong>${word}</strong>: ${meaning}`;
+        resultsEl.appendChild(div);
+      });
+
+      const historyEntry = document.createElement('div');
+      historyEntry.className = 'history-entry';
+      historyEntry.textContent = selectedKeywords.join(', ');
+      historyEl.appendChild(historyEntry);
+
+      indexEl.style.display = 'none';
+      searchEl.style.display = 'none';
+      keywordsEl.style.display = 'none';
+      selectedListEl.style.display = 'none';
+      historyEl.style.display = 'none';
+      submitBtn.style.display = 'none';
+      backBtn.style.display = 'block';
+    } else {
+      resultsEl.textContent = 'Nepasirinkta simbolių.';
+    }
+  };
+
+  backBtn.onclick = () => {
+    resultsEl.innerHTML = '';
+    indexEl.style.display = 'flex';
+    searchEl.style.display = 'block';
+    keywordsEl.style.display = 'flex';
+    selectedListEl.style.display = 'block';
+    historyEl.style.display = 'block';
+    submitBtn.style.display = 'block';
+    backBtn.style.display = 'none';
+  };
+</script>
+</body>
+</html>
