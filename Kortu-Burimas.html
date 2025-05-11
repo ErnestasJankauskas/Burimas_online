@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <title>3 kortų būrimas</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      position: relative;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background-color: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: #666;
+    }
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .card {
+      width: 200px;
+      height: 340px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card-back {
+      background-image: url('nemokamas_burimas_kortos_galas-200x340.webp');
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+    }
+
+    .buttons {
+      margin: 30px auto 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #8a2be2;
+    }
+
+    .explanation {
+      margin-top: 40px;
+      display: none;
+    }
+
+    .explanation ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .explanation li {
+      margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+
+<button class="back-button" onclick="history.back()">Atgal</button>
+
+<h1>3 kortų būrimas</h1>
+<p>Paspauskite ant kortų norėdami jas atversti.</p>
+
+<div class="cards" id="cards-container"></div>
+
+<div class="buttons">
+  <button onclick="reshuffleCards()">Išmaišyti kortas iš naujo</button>
+  <button onclick="flipAllCards()">Atversti visas kortas</button>
+</div>
+
+<div class="explanation" id="explanation">
+  <h2>Tavo kortų reikšmės:</h2>
+  <ul id="explanation-list"></ul>
+</div>
+
+<script>
+  const kortos = [
+    "4-200x340.webp",
+    "6-200x340.webp",
+    "boksto_korta-200x340.webp",
+    "desimties_tauriu-200x340.webp",
+    "devyniu_kardu-200x340.webp",
+    "fortunos_taro_korta-200x340.webp",
+    "jegos_taros_korta-200x340.webp",
+    "keturiu_skeptru-200x340.webp",
+    "keturiu_skeptru-200x340 (1).webp",
+    "monetu_karaliene-200x340.webp",
+    "monetu_pazas-200x340.webp",
+    "monetu_pazas-200x340 (1).webp",
+    "monetu_riteris-200x340.webp",
+    "mylymuju_taro_korta-200x340.webp",
+    "penkiu_monetu-200x340.webp",
+    "saules_korta-200x340.webp",
+    "septyniu_kardu-200x340.webp",
+    "skeptru_tuzas-200x340.webp",
+    "tauriu_pazas-200x340.webp",
+    "tauriu_riteris-200x340.webp",
+    "teisingumo_taro_korta-200x340.webp"
+  ];
+
+  const kortuPaaiskinimai = {
+    "4-200x340.webp": "Ši korta simbolizuoja stabilumą ir saugumą.",
+    "6-200x340.webp": "Kortos reikšmė – perėjimas į geresnę situaciją.",
+    "boksto_korta-200x340.webp": "Staigūs pokyčiai ar netikėtumai.",
+    "desimties_tauriu-200x340.webp": "Šeimos laimė ir harmonija.",
+    "devyniu_kardu-200x340.webp": "Nerimas, nemiga ar baimės.",
+    "fortunos_taro_korta-200x340.webp": "Likimo ratas – sėkmė ar netikėti pokyčiai.",
+    "jegos_taros_korta-200x340.webp": "Vidinė stiprybė ir drąsa.",
+    "keturiu_skeptru-200x340.webp": "Šventė, stabilumas, sėkmė.",
+    "keturiu_skeptru-200x340 (1).webp": "Šventė, stabilumas, sėkmė.",
+    "monetu_karaliene-200x340.webp": "Praktiškumas ir rūpestingumas.",
+    "monetu_pazas-200x340.webp": "Nauji finansiniai pasiūlymai.",
+    "monetu_pazas-200x340 (1).webp": "Nauji finansiniai pasiūlymai.",
+    "monetu_riteris-200x340.webp": "Atsakingas darbas ir kantrybė.",
+    "mylymuju_taro_korta-200x340.webp": "Meilė arba svarbus pasirinkimas.",
+    "penkiu_monetu-200x340.webp": "Finansinės problemos ar vienišumas.",
+    "saules_korta-200x340.webp": "Sėkmė, džiaugsmas ir energija.",
+    "septyniu_kardu-200x340.webp": "Gudrumas arba apgaulė.",
+    "skeptru_tuzas-200x340.webp": "Nauja pradžia, įkvėpimas.",
+    "tauriu_pazas-200x340.webp": "Emocinė žinia, romantika.",
+    "tauriu_riteris-200x340.webp": "Meilės pasiūlymas ar kūrybinis impulsas.",
+    "teisingumo_taro_korta-200x340.webp": "Teisingumas, pusiausvyra, sprendimai."
+  };
+
+
+  let flippedCount = 0;
+  let pasirinktosKortos = [];
+
+  function getRandomKortos(arr, count) {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+
+  function rodytiKortas() {
+    const container = document.getElementById("cards-container");
+    container.innerHTML = "";
+    flippedCount = 0;
+    document.getElementById("explanation").style.display = "none";
+
+    pasirinktosKortos = getRandomKortos(kortos, 3);
+
+    pasirinktosKortos.forEach((kortosPav, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.onclick = function () {
+        if (!card.classList.contains("flipped")) {
+          card.classList.add("flipped");
+          flippedCount++;
+          if (flippedCount === 3) showExplanations();
+        }
+      };
+
+      const inner = document.createElement("div");
+      inner.className = "card-inner";
+
+      const front = document.createElement("div");
+      front.className = "card-front";
+      front.style.backgroundImage = `url('nuotraukos.kortoms/${kortosPav}')`;
+
+      const back = document.createElement("div");
+      back.className = "card-back";
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+      container.appendChild(card);
+    });
+  }
+
+  function showExplanations() {
+    const list = document.getElementById("explanation-list");
+    list.innerHTML = "";
+    pasirinktosKortos.forEach((kortosPav, index) => {
+      const li = document.createElement("li");
+      const etikete = kortuPaaiskinimai[index] || `Kortelė ${index + 1}`;
+      li.textContent = `${etikete}: ${kortuPaaiskinimai[kortosPav] || "Nėra paaiškinimo."}`;
+      list.appendChild(li);
+    });
+    document.getElementById("explanation").style.display = "block";
+  }
+
+  function reshuffleCards() {
+    rodytiKortas();
+  }
+
+  function flipAllCards() {
+    const kortosElementai = document.querySelectorAll(".card");
+    kortosElementai.forEach(korta => korta.classList.add("flipped"));
+    flippedCount = 3;
+    showExplanations();
+  }
+
+  // Paleidžiam pradiniam užkrovimui
+  rodytiKortas();
+</script>
+
+</body>
+</html>
