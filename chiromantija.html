@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chiromantija</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0b0b0f;
+      color: #e8dbc5;
+      text-align: center;
+    }
+
+    h1 {
+      color: #C8ACA5;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem;
+      color: #e8dbc5;
+      background-color: rgba(155, 80, 123, 0.2);
+      border: 1px solid #9B507B;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    #preview {
+      margin-top: 1rem;
+      max-width: 300px;
+      border-radius: 10px;
+      border: 1px solid #C8ACA5;
+      cursor: pointer;
+    }
+
+    #analyze-btn {
+      margin-top: 2rem;
+      padding: 0.5rem 1rem;
+      background-color: #9B507B;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    #analyze-btn:hover {
+      background-color: #C8ACA5;
+      color: #322E39;
+    }
+
+    #result {
+      margin-top: 2rem;
+      font-size: 1.4rem;
+      padding: 1.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid #C8ACA5;
+    }
+
+    #secret-btn {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1rem;
+      background-color: #322E39;
+      color: #e8dbc5;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #secret-btn:hover {
+      background-color: #C8ACA5;
+      color: #0b0b0f;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Chiromantija</h1>
+
+<input type="file" accept="image/*" id="image-upload">
+<img id="preview" style="display:none" />
+
+<button id="analyze-btn">Nuskaityti Delną</button>
+
+<div id="result"></div>
+
+<button id="secret-btn">Paslaptingas Pranašavimas</button>
+
+<script>
+  const upload = document.getElementById('image-upload');
+  const preview = document.getElementById('preview');
+  const analyzeBtn = document.getElementById('analyze-btn');
+  const result = document.getElementById('result');
+  const secretBtn = document.getElementById('secret-btn');
+
+  const predictions = [
+    "Tavo likimo linija rodo neišvengiamą sėkmę — svarbu pasitikėti intuicija.",
+    "Širdies linija išduoda gilų emocinį pasaulį — tikros meilės ženklas netoliese.",
+    "Gyvybės linija rodo atkaklumą — nors kelias vingiuotas, tu pasieksi daugiau nei tikiesi."
+  ];
+
+  const secretMessages = [
+    "Tavo delnas slepia seną sielą — esi išminties nešėjas iš praeitų gyvenimų.",
+    "Slapta linija rodo, kad tavo likimas susietas su žmogumi, kurio dar nepažįsti.",
+    "Delno ženklas įspėja — artėja svarbus pasirinkimas, kuris pakeis tavo kelią."
+  ];
+
+  let clickCount = 0;
+
+  upload.onchange = () => {
+    const file = upload.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        analyzeBtn.style.opacity = '1';
+        analyzeBtn.style.pointerEvents = 'auto';
+        result.innerHTML = '';
+        secretBtn.style.display = 'none';
+        clickCount = 0;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  preview.onclick = () => {
+    clickCount++;
+    if (clickCount === 2) {
+      secretBtn.style.display = 'inline-block';
+    }
+  };
+
+  analyzeBtn.onclick = () => {
+    const message = predictions[Math.floor(Math.random() * predictions.length)];
+    result.innerHTML = `<strong>Chiromantijos rezultatas:</strong><br>${message}`;
+  };
+
+  secretBtn.onclick = () => {
+    const msg = secretMessages[Math.floor(Math.random() * secretMessages.length)];
+    alert("🔮 Slaptas chiromantinis ženklas:\n\n" + msg);
+  };
+</script>
+
+</body>
+</html>
+
