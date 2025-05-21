@@ -89,7 +89,7 @@
 
     #submit-btn {
       opacity: 0;
-      transition: opacity 0.8s ease, background 0.3s ease;
+      transition: opacity 0.8s ease, background 0.3s ease, box-shadow 0.8s ease;
       pointer-events: none;
       margin: 0 auto;
       padding: 0.5rem 1rem;
@@ -98,12 +98,15 @@
       border: none;
       cursor: pointer;
       border-radius: 6px;
+      box-shadow: 0 0 10px rgba(200, 172, 165, 0.3); /* always-glowing effect */
     }
 
-    #submit-btn:hover {
-      background-color: #C8ACA5;
-      color: #322E39;
+    .reveal-zone:hover #submit-btn {
+      opacity: 1;
+      pointer-events: auto;
+      box-shadow: 0 0 20px rgba(200, 172, 165, 0.8); /* intensified glow on hover */
     }
+
 
     .results {
       margin-top: 2rem;
@@ -160,9 +163,61 @@
       background-color: #C8ACA5;
       color: #322E39;
     }
+
+    .button-wrapper {
+      width: fit-content;
+      margin: 0 auto;
+      padding: 0;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(200, 172, 165, 0.15); /* persistent glow */
+      transition: box-shadow 0.6s ease;
+    }
+
+    .reveal-zone:hover .button-wrapper {
+      box-shadow: 0 0 20px rgba(200, 172, 165, 0.8); /* intensified on hover */
+    }
+
+    #submit-btn {
+      opacity: 0;
+      pointer-events: none;
+      background-color: #9B507B;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: opacity 0.8s ease, background 0.3s ease;
+    }
+
+    .reveal-zone:hover #submit-btn {
+      opacity: 1;
+      pointer-events: auto;
+      background-color: #C8ACA5;
+      color: #322E39;
+    }
+
+    #top-back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #9B507B;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      z-index: 10;
+    }
+
+    #top-back-btn:hover {
+      background-color: #C8ACA5;
+      color: #322E39;
+    }
+
   </style>
 </head>
 <body>
+<button id="top-back-btn">← Grįžti į Pradžią</button>
 <h1>Sapnų Aiškinimas</h1>
 <input type="text" id="search" placeholder="Ieškoti sapno simbolių..." />
 
@@ -173,8 +228,11 @@
 <div class="selected-list" id="selected-list"></div>
 
 <div class="reveal-zone">
-  <button id="submit-btn">Rodyti Aiškinimus</button>
+  <div class="button-wrapper">
+    <button id="submit-btn">Rodyti Aiškinimus</button>
+  </div>
 </div>
+
 
 <div class="results" id="results"></div>
 <button id="back-btn" style="display:none">Grįžti į Pradžią</button>
@@ -328,6 +386,11 @@
     submitBtn.style.display = 'block';
     backBtn.style.display = 'none';
   };
+
+  document.getElementById('top-back-btn').onclick = () => {
+    window.location.href = 'Pagrindinis_puslapis.html';
+  };
+
 </script>
 </body>
 </html>
