@@ -12,13 +12,89 @@
       margin: 0;
       padding: 20px;
       min-height: 100vh;
+      position: relative;
     }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .karma-container {
+      position: absolute;
+      right: 20px;
+      top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .karma-points {
+      font-size: 18px;
+      font-weight: bold;
+      color: #9B507B;
+    }
+
+    .karma-badge {
+      background-color: rgba(155, 80, 123, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .karma-animation {
+      position: fixed;
+      color: #9B507B;
+      font-weight: bold;
+      font-size: 18px;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      animation: karmaFlow 1.5s ease-out forwards;
+    }
+
+    @keyframes karmaFlow {
+      0% {
+        transform: translate(var(--start-x), var(--start-y));
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--end-x), var(--end-y));
+        opacity: 0;
+      }
+    }
+
+    .back-button {
+      background-color: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      position: absolute;
+      left: 20px;
+      top: 20px;
+    }
+
+      .back-button:hover {
+        background-color: #666;
+      }
 
     .main-wrapper {
       display: flex;
       gap: 20px;
       max-width: 1200px;
       margin: 0 auto;
+      padding-top: 40px;
     }
 
     .ad-section {
@@ -50,6 +126,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
 
     input {
@@ -71,11 +148,13 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s;
+      position: relative;
+      overflow: hidden;
     }
 
-    button:hover {
-      background-color: #7a3e62;
-    }
+      button:hover {
+        background-color: #7a3e62;
+      }
 
     .result-card {
       background-color: rgba(255, 255, 255, 0.1);
@@ -85,10 +164,10 @@
       display: none;
     }
 
-    .result-card h2 {
-      color: #C8ACA5;
-      margin-top: 0;
-    }
+      .result-card h2 {
+        color: #C8ACA5;
+        margin-top: 0;
+      }
 
     .number-display {
       font-size: 48px;
@@ -117,132 +196,185 @@
   </style>
 </head>
 <body>
-<div class="main-wrapper">
-  <div class="ad-section">
-    <img src="css/img/iki_reklama.jpg" alt="IKI reklama" class="ad-image">
-  </div>
 
-  <div class="container">
-    <h1>Skaičių Reikšmių Tyrimas</h1>
+  <button class="back-button" onclick="history.back()">Atgal</button>
 
-    <div class="input-section">
-      <input type="number" id="numberInput" placeholder="Įveskite skaičių">
-      <button id="analyzeBtn">Išanalizuoti</button>
-    </div>
-
-    <div id="resultCard" class="result-card">
-      <div class="number-display" id="numberDisplay"></div>
-      <h2>Skaičiaus reikšmė</h2>
-      <p class="meaning-text" id="meaningText"></p>
-    </div>
-
-    <div class="history">
-      <h2>Ankstesni tyrimai</h2>
-      <div id="historyList"></div>
+  <div class="header-container">
+    <h1></h1>
+    <div class="karma-container">
+      <div class="karma-badge">
+        <span>Karma:</span>
+        <span class="karma-points" id="karma-points">0</span>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  const meanings = [
-    "Šis skaičius simbolizuoja pradžią ir naujus projektus. Jis dažnai siejamas su kūrybiškumu ir iniciatyva.",
-    "Dvejetas reiškia pusiausvyrą ir harmoniją. Tai yra diplomatijos skaičius, rodantis bendradarbiavimą.",
-    "Trys yra socialumo ir komunikacijos skaičius. Jis siejamas su optimizmu ir džiaugsmu.",
-    "Ketvertas simbolizuoja stabilumą ir tvarką. Tai praktiškumo ir disciplinos skaičius.",
-    "Penketas reiškia laisvę ir pokyčius. Jis siejamas su nuotykių ieškojimu ir adaptyvumu.",
-    "Šešetas yra atsakomybės ir rūpesčio skaičius. Jis dažnai siejamas su šeima ir namais.",
-    "Septynetas simbolizuoja išmintį ir vidinę žinią. Tai mistinis ir filosofinis skaičius.",
-    "Aštuonetas yra materialinio pasisekimo skaičius. Jis siejamas su ambicijomis ir autoritetu.",
-    "Devynetas reiškia užbaigimą ir humanitarizmą. Tai altruizmo ir universalios meilės skaičius.",
-    "Šis skaičius simbolizuoja begalybę ir potencialą. Jis dažnai siejamas su dvasiškumu ir aukštesniais tikslais."
-  ];
+  <div class="main-wrapper">
+    <div class="ad-section">
+      <img src="css/img/iki_reklama.jpg" alt="IKI reklama" class="ad-image">
+    </div>
 
-  const randomMeanings = [
-    "Šis skaičius paslaptingai susijęs su jūsų ateities planais.",
-    "Numerologai teigia, kad šis skaičius turi ypatingą ryšį su Mėnulio fazėmis.",
-    "Senovės kultūrose šis skaičius buvo laikomas magišku.",
-    "Kažkas įdomaus jūsų gyvenime įvyks, kai šis skaičius pasikartos tris kartus.",
-    "Šis skaičius gali būti jūsų asmeninis talismanas.",
-    "Astrologai teigia, kad šis skaičius yra susijęs su Jūsų zodiako ženklu.",
-    "Šis skaičius kartu su jūsų gimimo data sudaro unikalią energetinę kombinaciją."
-  ];
+    <div class="container">
+      <div class="input-section">
+        <input type="number" id="numberInput" placeholder="Įveskite skaičių">
+        <button id="analyzeBtn">Išanalizuoti</button>
+      </div>
 
-  const history = [];
+      <div id="resultCard" class="result-card">
+        <div class="number-display" id="numberDisplay"></div>
+        <h2>Skaičiaus reikšmė</h2>
+        <p class="meaning-text" id="meaningText"></p>
+      </div>
 
-  document.getElementById('analyzeBtn').addEventListener('click', function() {
-    const numberInput = document.getElementById('numberInput');
-    const number = numberInput.value;
+      <div class="history">
+        <h2>Ankstesni tyrimai</h2>
+        <div id="historyList"></div>
+      </div>
+    </div>
+  </div>
 
-    if (!number) {
-      alert("Įveskite skaičių!");
-      return;
-    }
+  <script>
+    const meanings = [
+      "Šis skaičius simbolizuoja pradžią ir naujus projektus. Jis dažnai siejamas su kūrybiškumu ir iniciatyva.",
+      "Dvejetas reiškia pusiausvyrą ir harmoniją. Tai yra diplomatijos skaičius, rodantis bendradarbiavimą.",
+      "Trys yra socialumo ir komunikacijos skaičius. Jis siejamas su optimizmu ir džiaugsmu.",
+      "Ketvertas simbolizuoja stabilumą ir tvarką. Tai praktiškumo ir disciplinos skaičius.",
+      "Penketas reiškia laisvę ir pokyčius. Jis siejamas su nuotykių ieškojimu ir adaptyvumu.",
+      "Šešetas yra atsakomybės ir rūpesčio skaičius. Jis dažnai siejamas su šeima ir namais.",
+      "Septynetas simbolizuoja išmintį ir vidinę žinią. Tai mistinis ir filosofinis skaičius.",
+      "Aštuonetas yra materialinio pasisekimo skaičius. Jis siejamas su ambicijomis ir autoritetu.",
+      "Devynetas reiškia užbaigimą ir humanitarizmą. Tai altruizmo ir universalios meilės skaičius.",
+      "Šis skaičius simbolizuoja begalybę ir potencialą. Jis dažnai siejamas su dvasiškumu ir aukštesniais tikslais."
+    ];
 
-    analyzeNumber(number);
-    numberInput.value = "";
-  });
+    const randomMeanings = [
+      "Šis skaičius paslaptingai susijęs su jūsų ateities planais.",
+      "Numerologai teigia, kad šis skaičius turi ypatingą ryšį su Mėnulio fazėmis.",
+      "Senovės kultūrose šis skaičius buvo laikomas magišku.",
+      "Kažkas įdomaus jūsų gyvenime įvyks, kai šis skaičius pasikartos tris kartus.",
+      "Šis skaičius gali būti jūsų asmeninis talismanas.",
+      "Astrologai teigia, kad šis skaičius yra susijęs su Jūsų zodiako ženklu.",
+      "Šis skaičius kartu su jūsų gimimo data sudaro unikalią energetinę kombinaciją."
+    ];
 
-  function analyzeNumber(number) {
-    // Display the number
-    document.getElementById('numberDisplay').textContent = number;
+    const history = [];
+    let karmaPoints = 0;
 
-    // Generate random meaning
-    let meaning = "";
-    const num = parseInt(number);
+    document.getElementById('analyzeBtn').addEventListener('click', function (e) {
+      const numberInput = document.getElementById('numberInput');
+      const number = numberInput.value;
 
-    if (num >= 1 && num <= 10) {
-      meaning = meanings[num - 1];
-    } else {
-      // For numbers outside 1-10, combine random meanings
-      const randomCount = Math.floor(Math.random() * 3) + 1;
-      for (let i = 0; i < randomCount; i++) {
-        const randomIndex = Math.floor(Math.random() * randomMeanings.length);
-        meaning += randomMeanings[randomIndex] + " ";
+      if (!number) {
+        alert("Įveskite skaičių!");
+        return;
       }
-    }
 
-    // Add some random interpretations
-    if (Math.random() > 0.5) {
-      meaning += " Skaičiaus skaitmenų suma yra " + sumDigits(number) + ", kuri taip pat turi savo reikšmę.";
-    }
+      // Add karma points with animation
+      addKarmaPoints(e, 15);
 
-    if (number.length > 1 && Math.random() > 0.7) {
-      meaning += " Šis skaičius yra palindromas (skaitomas vienodai iš abiejų pusių).";
-    }
-
-    document.getElementById('meaningText').textContent = meaning;
-    document.getElementById('resultCard').style.display = "block";
-
-    // Add to history
-    history.unshift({
-      number: number,
-      meaning: meaning
+      analyzeNumber(number);
+      numberInput.value = "";
     });
 
-    updateHistory();
-  }
+    function addKarmaPoints(event, points) {
+      const buttonRect = event.target.getBoundingClientRect();
+      const karmaDisplay = document.querySelector('.karma-badge');
+      const karmaDisplayRect = karmaDisplay.getBoundingClientRect();
 
-  function sumDigits(number) {
-    return number.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
-  }
+      // Calculate start position (button center)
+      const startX = buttonRect.left + buttonRect.width / 2;
+      const startY = buttonRect.top + buttonRect.height / 2;
 
-  function updateHistory() {
-    const historyList = document.getElementById('historyList');
-    historyList.innerHTML = "";
+      // Calculate end position (karma display center)
+      const endX = karmaDisplayRect.left + karmaDisplayRect.width / 2 - startX;
+      const endY = karmaDisplayRect.top + karmaDisplayRect.height / 2 - startY;
 
-    // Show only last 5 items
-    const displayItems = history.slice(0, 5);
+      // Create animation element
+      const karmaAnim = document.createElement('div');
+      karmaAnim.className = 'karma-animation';
+      karmaAnim.textContent = `+${points}`;
+      karmaAnim.style.setProperty('--start-x', '0px');
+      karmaAnim.style.setProperty('--start-y', '0px');
+      karmaAnim.style.setProperty('--end-x', `${endX}px`);
+      karmaAnim.style.setProperty('--end-y', `${endY}px`);
+      karmaAnim.style.left = `${startX}px`;
+      karmaAnim.style.top = `${startY}px`;
 
-    displayItems.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'history-item';
-      div.innerHTML = `
-                    <span><strong>${item.number}</strong></span>
-                    <span>${item.meaning.substring(0, 30)}...</span>
-                `;
-      historyList.appendChild(div);
-    });
-  }
-</script>
+      document.body.appendChild(karmaAnim);
+
+      // Update karma points after a short delay
+      setTimeout(() => {
+        karmaPoints += points;
+        document.getElementById('karma-points').textContent = karmaPoints;
+
+        // Remove animation element after animation completes
+        setTimeout(() => {
+          karmaAnim.remove();
+        }, 1500);
+      }, 300);
+    }
+
+    function analyzeNumber(number) {
+      // Display the number
+      document.getElementById('numberDisplay').textContent = number;
+
+      // Generate random meaning
+      let meaning = "";
+      const num = parseInt(number);
+
+      if (num >= 1 && num <= 10) {
+        meaning = meanings[num - 1];
+      } else {
+        // For numbers outside 1-10, combine random meanings
+        const randomCount = Math.floor(Math.random() * 3) + 1;
+        for (let i = 0; i < randomCount; i++) {
+          const randomIndex = Math.floor(Math.random() * randomMeanings.length);
+          meaning += randomMeanings[randomIndex] + " ";
+        }
+      }
+
+      // Add some random interpretations
+      if (Math.random() > 0.5) {
+        meaning += " Skaičiaus skaitmenų suma yra " + sumDigits(number) + ", kuri taip pat turi savo reikšmę.";
+      }
+
+      if (number.length > 1 && Math.random() > 0.7) {
+        meaning += " Šis skaičius yra palindromas (skaitomas vienodai iš abiejų pusių).";
+      }
+
+      document.getElementById('meaningText').textContent = meaning;
+      document.getElementById('resultCard').style.display = "block";
+
+      // Add to history
+      history.unshift({
+        number: number,
+        meaning: meaning
+      });
+
+      updateHistory();
+    }
+
+    function sumDigits(number) {
+      return number.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+    }
+
+    function updateHistory() {
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = "";
+
+      // Show only last 5 items
+      const displayItems = history.slice(0, 5);
+
+      displayItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+                        <span><strong>${item.number}</strong></span>
+                        <span>${item.meaning.substring(0, 30)}...</span>
+                    `;
+        historyList.appendChild(div);
+      });
+    }
+  </script>
 </body>
 </html>
