@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <title>Sapnų būrimo redagavimas</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #222;
+      padding: 30px;
+      border-radius: 12px;
+      display: inline-block;
+      text-align: left;
+      max-width: 600px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #8a2be2;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      background-color: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background-color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<button class="back-button" onclick="history.back()">Atgal</button>
+
+<h1>Sapnų simbolių reikšmių redagavimas</h1>
+
+<form id="sapnu-forma">
+  <label for="simboliai">Pasirinkite sapno simbolį (-ius):</label>
+  <select id="simboliai" multiple>
+    <option value="gyvate">Gyvatė</option>
+    <option value="vanduo">Vanduo</option>
+    <option value="dantis">Dantis</option>
+    <option value="kritimas">Kritimas</option>
+    <option value="uodega">Uodega</option>
+  </select>
+
+  <label for="naujasSimbolis">Įveskite naują simbolį (jei jo nėra sąraše):</label>
+  <input type="text" id="naujasSimbolis" placeholder="Pvz.: Erelis">
+
+  <label for="reiksme">Simbolio reikšmė:</label>
+  <textarea id="reiksme" rows="6" required></textarea>
+
+  <button type="submit">Išsaugoti reikšmę</button>
+</form>
+
+<script>
+  document.getElementById("sapnu-forma").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const pasirinktiSimboliai = Array.from(document.getElementById("simboliai").selectedOptions).map(option => option.value);
+    const naujasSimbolis = document.getElementById("naujasSimbolis").value.trim();
+    const reiksme = document.getElementById("reiksme").value;
+
+    if (naujasSimbolis) {
+      pasirinktiSimboliai.push(naujasSimbolis);
+
+      // Automatiškai pridedam prie select (simuliacija)
+      const newOption = document.createElement("option");
+      newOption.value = naujasSimbolis.toLowerCase();
+      newOption.text = naujasSimbolis;
+      newOption.selected = true;
+      document.getElementById("simboliai").appendChild(newOption);
+    }
+
+    console.log("Simboliai:", pasirinktiSimboliai);
+    console.log("Reikšmė:", reiksme);
+
+    alert("Simbolių reikšmė išsaugota (simuliacija).");
+    this.reset();
+  });
+</script>
+
+</body>
+</html>

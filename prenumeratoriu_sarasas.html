@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prenumeratorių sąrašas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      padding: 20px;
+    }
+    table {
+      background-color: #222;
+      border-radius: 8px;
+    }
+    thead {
+      background-color: #333;
+    }
+    tbody tr:hover {
+      background-color: #444;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>Prenumeratorių sąrašas</h1>
+<table class="table table-dark table-striped table-hover align-middle">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Prisijungimo vardas</th>
+    <th>Prenumeratos laikas (dienomis)</th>
+    <th>Išbandytų būrimų skaičius</th>
+    <th>Veiksmai</th>
+  </tr>
+  </thead>
+  <tbody id="userTableBody"></tbody>
+</table>
+
+<button class="btn btn-light mt-3" onclick="window.history.back()">Grįžti atgal</button>
+
+<!-- Modalas -->
+<div class="modal fade" id="magicianModal" tabindex="-1" aria-labelledby="magicianModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title" id="magicianModalLabel">Vartotojas tapo burtininku!</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Uždaryti"></button>
+      </div>
+      <div class="modal-body" id="modalBodyText">
+        <!-- Dinaminis tekstas -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Uždaryti</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sugeneruojame 30 prenumeratorių su atsitiktiniais duomenimis
+  const users = [];
+  for (let i = 1; i <= 30; i++) {
+    users.push({
+      username: `vartotojas${i}`,
+      daysSubscribed: Math.floor(Math.random() * 365) + 1, // 1-365 dienos
+      readingsTried: Math.floor(Math.random() * 50) + 1    // 1-50 būrimų
+    });
+  }
+
+  const tbody = document.getElementById('userTableBody');
+  users.forEach((user, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${user.username}</td>
+        <td>${user.daysSubscribed}</td>
+        <td>${user.readingsTried}</td>
+        <td>
+          <button class="btn btn-outline-light btn-sm" onclick="makeMagician('${user.username}')">Burtininkas</button>
+        </td>
+      `;
+    tbody.appendChild(tr);
+  });
+
+  // Modal atidarymo funkcija
+  function makeMagician(username) {
+    const modalText = document.getElementById('modalBodyText');
+    modalText.textContent = `Vartotojas ${username} dabar tapo burtininku ir galės naudotis funkcijomis kaip burtininkas.`;
+    const modal = new bootstrap.Modal(document.getElementById('magicianModal'));
+    modal.show();
+  }
+</script>
+</body>
+</html>

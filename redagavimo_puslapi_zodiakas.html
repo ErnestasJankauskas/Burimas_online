@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <title>Zodiakų suderinamumo redagavimas</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: #222;
+      padding: 30px;
+      border-radius: 12px;
+      display: inline-block;
+      text-align: left;
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #8a2be2;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      background-color: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<button class="back-button" onclick="history.back()">Atgal</button>
+
+<h1>Zodiakų suderinamumo įrašymas</h1>
+
+<form id="zodiako-forma">
+  <label for="zodiakas1">Pirmas zodiakas:</label>
+  <select id="zodiakas1" required>
+    <option value="">-- Pasirinkite --</option>
+    <option>Avinas</option>
+    <option>Jautis</option>
+    <option>Dvyniai</option>
+    <option>Vėžys</option>
+    <option>Liūtas</option>
+    <option>Mergelė</option>
+    <option>Svarstyklės</option>
+    <option>Skorpionas</option>
+    <option>Šaulys</option>
+    <option>Ožiaragis</option>
+    <option>Vandenis</option>
+    <option>Žuvys</option>
+  </select>
+
+  <label for="zodiakas2">Antras zodiakas:</label>
+  <select id="zodiakas2" required>
+    <option value="">-- Pasirinkite --</option>
+    <option>Avinas</option>
+    <option>Jautis</option>
+    <option>Dvyniai</option>
+    <option>Vėžys</option>
+    <option>Liūtas</option>
+    <option>Mergelė</option>
+    <option>Svarstyklės</option>
+    <option>Skorpionas</option>
+    <option>Šaulys</option>
+    <option>Ožiaragis</option>
+    <option>Vandenis</option>
+    <option>Žuvys</option>
+  </select>
+
+  <label for="rezultatas">Suderinamumo rezultatas:</label>
+  <textarea id="rezultatas" rows="6" required></textarea>
+
+  <button type="submit">Išsaugoti suderinamumą</button>
+</form>
+
+<script>
+  document.getElementById("zodiako-forma").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const z1 = document.getElementById("zodiakas1").value;
+    const z2 = document.getElementById("zodiakas2").value;
+    const rezultatas = document.getElementById("rezultatas").value;
+
+    if (z1 === z2) {
+      alert("Pasirinkti zodiakai turi būti skirtingi.");
+      return;
+    }
+
+    // Simuliacija: galima naudoti localStorage arba siųsti į serverį
+    console.log("Zodiakas 1:", z1);
+    console.log("Zodiakas 2:", z2);
+    console.log("Suderinamumo rezultatas:", rezultatas);
+
+    alert("Suderinamumo rezultatas išsaugotas (simuliacija).");
+    this.reset();
+  });
+</script>
+
+</body>
+</html>

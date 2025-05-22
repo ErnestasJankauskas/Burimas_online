@@ -2,7 +2,7 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Redaguoti kortų būrimą</title>
+  <title>Delno būrimo redagavimas</title>
   <style>
     body {
       background-color: #000;
@@ -22,6 +22,7 @@
       border-radius: 12px;
       display: inline-block;
       text-align: left;
+      max-width: 500px;
     }
 
     label {
@@ -37,10 +38,6 @@
       margin-bottom: 20px;
       border-radius: 6px;
       border: none;
-    }
-
-    input[type="file"] {
-      margin-bottom: 20px;
     }
 
     button {
@@ -80,35 +77,30 @@
 
 <button class="back-button" onclick="history.back()">Atgal</button>
 
-<h1>Pridėti / Redaguoti Taro kortą</h1>
+<h1>Įrašyti naują delno būrimo rezultatą</h1>
 
-<form id="kortos-form">
-  <label for="kortosPavadinimas">Kortos paveikslėlio pavadinimas (pvz. „nauja_korta.webp“):</label>
-  <input type="text" id="kortosPavadinimas" name="kortosPavadinimas" required>
+<form id="delno-forma">
+  <label for="pavadinimas">Būrimo pavadinimas:</label>
+  <input type="text" id="pavadinimas" name="pavadinimas" required>
 
-  <label for="kortosPaaiskinimas">Kortos paaiškinimas:</label>
-  <textarea id="kortosPaaiskinimas" name="kortosPaaiskinimas" rows="4" required></textarea>
+  <label for="rezultatas">Būrimo rezultatas:</label>
+  <textarea id="rezultatas" name="rezultatas" rows="5" required></textarea>
 
-  <label for="kortosNuotrauka">Įkelti kortos paveikslėlį:</label>
-  <input type="file" id="kortosNuotrauka" name="kortosNuotrauka" accept="image/*" required>
-
-  <button type="submit">Išsaugoti kortą</button>
+  <button type="submit">Išsaugoti rezultatą</button>
 </form>
 
 <script>
-  document.getElementById("kortos-form").addEventListener("submit", function (event) {
+  document.getElementById("delno-forma").addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const pav = document.getElementById("kortosPavadinimas").value;
-    const paaisk = document.getElementById("kortosPaaiskinimas").value;
-    const failas = document.getElementById("kortosNuotrauka").files[0];
+    const pavadinimas = document.getElementById("pavadinimas").value;
+    const rezultatas = document.getElementById("rezultatas").value;
 
-    // Vieta, kur galima būtų išsiųsti duomenis į serverį arba saugoti vietiniu formatu
-    console.log("Pavadinimas:", pav);
-    console.log("Paaiškinimas:", paaisk);
-    console.log("Failas:", failas);
+    // Čia galėtum išsiųsti į serverį arba saugoti localStorage
+    console.log("Pavadinimas:", pavadinimas);
+    console.log("Rezultatas:", rezultatas);
 
-    alert("Kortos informacija išsaugota (simuliacija).");
+    alert("Delno būrimo rezultatas išsaugotas (simuliacija).");
     this.reset();
   });
 </script>

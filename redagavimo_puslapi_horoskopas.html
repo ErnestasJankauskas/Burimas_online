@@ -2,7 +2,7 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Redaguoti kortų būrimą</title>
+  <title>Horoskopo reikšmės redagavimas pagal datą</title>
   <style>
     body {
       background-color: #000;
@@ -22,6 +22,7 @@
       border-radius: 12px;
       display: inline-block;
       text-align: left;
+      max-width: 500px;
     }
 
     label {
@@ -30,17 +31,13 @@
       font-weight: bold;
     }
 
-    input[type="text"],
+    input,
     textarea {
       width: 100%;
       padding: 8px;
       margin-bottom: 20px;
       border-radius: 6px;
       border: none;
-    }
-
-    input[type="file"] {
-      margin-bottom: 20px;
     }
 
     button {
@@ -80,35 +77,30 @@
 
 <button class="back-button" onclick="history.back()">Atgal</button>
 
-<h1>Pridėti / Redaguoti Taro kortą</h1>
+<h1>Horoskopo reikšmė pagal datą</h1>
 
-<form id="kortos-form">
-  <label for="kortosPavadinimas">Kortos paveikslėlio pavadinimas (pvz. „nauja_korta.webp“):</label>
-  <input type="text" id="kortosPavadinimas" name="kortosPavadinimas" required>
+<form id="horoskopo-forma">
+  <label for="data">Pasirinkite datą:</label>
+  <input type="date" id="data" required>
 
-  <label for="kortosPaaiskinimas">Kortos paaiškinimas:</label>
-  <textarea id="kortosPaaiskinimas" name="kortosPaaiskinimas" rows="4" required></textarea>
+  <label for="rezultatas">Būrimo reikšmė:</label>
+  <textarea id="rezultatas" rows="6" required></textarea>
 
-  <label for="kortosNuotrauka">Įkelti kortos paveikslėlį:</label>
-  <input type="file" id="kortosNuotrauka" name="kortosNuotrauka" accept="image/*" required>
-
-  <button type="submit">Išsaugoti kortą</button>
+  <button type="submit">Išsaugoti reikšmę</button>
 </form>
 
 <script>
-  document.getElementById("kortos-form").addEventListener("submit", function (event) {
+  document.getElementById("horoskopo-forma").addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const pav = document.getElementById("kortosPavadinimas").value;
-    const paaisk = document.getElementById("kortosPaaiskinimas").value;
-    const failas = document.getElementById("kortosNuotrauka").files[0];
+    const data = document.getElementById("data").value;
+    const rezultatas = document.getElementById("rezultatas").value;
 
-    // Vieta, kur galima būtų išsiųsti duomenis į serverį arba saugoti vietiniu formatu
-    console.log("Pavadinimas:", pav);
-    console.log("Paaiškinimas:", paaisk);
-    console.log("Failas:", failas);
+    // Galima išsaugoti į localStorage arba siųsti į serverį
+    console.log("Data:", data);
+    console.log("Horoskopo reikšmė:", rezultatas);
 
-    alert("Kortos informacija išsaugota (simuliacija).");
+    alert("Horoskopo reikšmė išsaugota (simuliacija).");
     this.reset();
   });
 </script>
