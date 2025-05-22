@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="lt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Burtininkų sąrašas</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
     body {
@@ -28,10 +28,18 @@
     .burtininkas .btn-danger {
       white-space: nowrap;
     }
+    .btn-back {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
 <h1 class="text-center mb-4">Burtininkų sąrašas</h1>
+
+<!-- Grįžti atgal mygtukas -->
+<div class="text-center">
+  <button class="btn btn-secondary btn-back" onclick="window.location.href='admin.html'">Grįžti atgal</button>
+</div>
 
 <div id="burtininkuSarasas">
   <!-- Dinamiškai užpildytas JavaScript -->
@@ -69,13 +77,13 @@
       const elementas = document.createElement("div");
       elementas.classList.add("burtininkas");
       elementas.innerHTML = `
-          <div>
-            <strong>${index + 1}. ${burtininkas.vardas}</strong>
-            <small>Paskutinį kartą redagavo: ${burtininkas.paskutinis}</small><br>
-            <small>Burimas: ${burtininkas.burimas}</small>
-          </div>
-          <button class="btn btn-danger" onclick="atleisti('${burtininkas.vardas}')">Atleisti</button>
-        `;
+            <div>
+              <strong>${index + 1}. ${burtininkas.vardas}</strong>
+              <small>Paskutinį kartą redagavo: ${burtininkas.paskutinis}</small><br>
+              <small>Burimas: ${burtininkas.burimas}</small>
+            </div>
+            <button class="btn btn-danger" onclick="atleisti('${burtininkas.vardas}')">Atleisti</button>
+          `;
       sarasasDiv.appendChild(elementas);
     });
   }
