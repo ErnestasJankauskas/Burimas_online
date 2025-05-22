@@ -12,6 +12,7 @@
       margin: 0;
       padding: 20px;
       min-height: 100vh;
+      position: relative;
     }
 
     .main-wrapper {
@@ -75,9 +76,9 @@
       transition: background-color 0.3s;
     }
 
-    button:hover {
-      background-color: #7a3e62;
-    }
+      button:hover {
+        background-color: #7a3e62;
+      }
 
     .result-card {
       background-color: rgba(255, 255, 255, 0.1);
@@ -88,10 +89,10 @@
       text-align: center;
     }
 
-    .result-card h2 {
-      color: #C8ACA5;
-      margin-top: 0;
-    }
+      .result-card h2 {
+        color: #C8ACA5;
+        margin-top: 0;
+      }
 
     .zodiac-image {
       width: 150px;
@@ -117,270 +118,369 @@
       display: flex;
       justify-content: space-between;
     }
+
+    /* Karma system styles */
+    .karma-container {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .karma-points {
+      font-size: 18px;
+      font-weight: bold;
+      color: #9B507B;
+    }
+
+    .karma-badge {
+      background-color: rgba(155, 80, 123, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .karma-animation {
+      position: fixed;
+      color: #9B507B;
+      font-weight: bold;
+      font-size: 18px;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      animation: karmaFlow 1.5s ease-out forwards;
+    }
+
+    @keyframes karmaFlow {
+      0% {
+        transform: translate(var(--start-x), var(--start-y));
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--end-x), var(--end-y));
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="main-wrapper">
-  <div class="ad-section">
-    <img src="css/img/iki_reklama.jpg" alt="IKI reklama" class="ad-image">
-  </div>
-
-  <div class="container">
-    <h1>Horoskopų Tikrinimas</h1>
-
-    <div class="input-section">
-      <input type="date" id="birthDate" placeholder="Įveskite gimimo datą">
-      <button id="checkBtn">Patikrinti horoskopą</button>
-    </div>
-
-    <div id="resultCard" class="result-card">
-      <h2 id="zodiacName"></h2>
-      <img id="zodiacImage" src="" alt="Zodiako ženklas" class="zodiac-image">
-      <div class="meaning-text" id="meaningText"></div>
-    </div>
-
-    <div class="history">
-      <h2>Ankstesni horoskopų patikrinimai</h2>
-      <div id="historyList"></div>
+  <!-- Karma System -->
+  <div class="karma-container">
+    <div class="karma-badge">
+      <span>Karma:</span>
+      <span class="karma-points" id="karma-points">0</span>
     </div>
   </div>
-</div>
 
-<script>
-  // Zodiac signs data
-  const zodiacSigns = [
-    { 
-      name: "Avinas", 
-      dateRange: "Kovo 21 - Balandžio 19",
-      image: "css/img/avinas.png",
-      descriptions: [
-        "2025 metai Avinui bus kupini energijos ir naujų pradžią. Jūsų drąsa ir iniciatyva bus ypač pastebimos pirmoje metų pusėje.",
-        "Avinų horoskopas 2025 metams numato sėkmę karjeroje. Nepaisykite skeptikų - jūsų idėjos yra genialios!",
-        "Meilės frontas Avinams 2025 metais atneš nemažai aistros. Galite netikėtai susidraugauti su senu pažįstamu."
-      ]
-    },
-    { 
-      name: "Jautis", 
-      dateRange: "Balandžio 20 - Gegužės 20",
-      image: "css/img/jautis.png",
-      descriptions: [
-        "Jaučių 2025 metų horoskopas skelbia finansinę stabilumą. Jūsų sunkūs darbai pagaliau atneš vaisių.",
-        "Jums, Jaučiams, 2025 metai bus kupini asmeninio augimo. Išmoksite priimti pokyčius kaip natūralų gyvenimo dalį.",
-        "Sveikatos klausimai Jaučiams 2025 metais reikalaus dėmesio. Nebijokite kreiptis pagalbos į specialistus."
-      ]
-    },
-    { 
-      name: "Dvyniai", 
-      dateRange: "Gegužės 21 - Birželio 20",
-      image: "css/img/dvyniai.png",
-      descriptions: [
-        "Dvynių 2025 metų horoskopas žada komunikacijos sėkmę. Jūsų socialiniai įgūdžiai atvers daug naujų durų.",
-        "Dvyniams 2025 metai bus ypač palankūs mokslui ir kelionėms. Neleiskite šanso praslysti pro pirštus!",
-        "Jūsų kūrybiškumas 2025 metais sieks viršūnių. Dvyniai turės galimybę realizuoti ilgai puoselėtus projektus."
-      ]
-    },
-    { 
-      name: "Vėžys", 
-      dateRange: "Birželio 21 - Liepos 22",
-      image: "css/img/vezys.png",
-      descriptions: [
-        "Vėžių horoskopas 2025 metams akcentuoja šeimos vertybes. Artimųjų pagalba bus nepakeičiama jūsų sėkmei.",
-        "2025 metai Vėžiams bus emocingi. Išmokite išreikšti savo jausmus, o ne juos slėpti.",
-        "Finansinė padėtis 2025 metais pagerės, ypač jei investuosite į nekilnojamąjį turtą ar šeimos verslą."
-      ]
-    },
-    { 
-      name: "Liūtas", 
-      dateRange: "Liepos 23 - Rugpjūčio 22",
-      image: "css/img/liutas.png",
-      descriptions: [
-        "Liūtų 2025 metų horoskopas skelbia karjeros šuolį. Jūsų lyderystės savybės bus pripažįstamos ir apdovanotos.",
-        "2025 metai Liūtams bus kupini romantikos. Vienišos širdys galiausiai ras savo antrą pusę.",
-        "Kūrybinės Liūtų energijos 2025 metais bus nepaprastai galingos. Tai puikus metas pradėti meno projektą."
-      ]
-    },
-    { 
-      name: "Mergelė", 
-      dateRange: "Rugpjūčio 23 - Rugsėjo 22",
-      image: "css/img/mergele.png",
-      descriptions: [
-        "Mergelių 2025 metų horoskopas žada sveikatos pagerėjimą. Jūsų kruopštumas sveikatos klausimais atneš vaisių.",
-        "2025 metai Mergelėms bus palankūs mokslui ir saviugdai. Įgytos žinios atneš ne tik džiaugsmą, bet ir naudą.",
-        "Finansinė disciplina 2025 metais leis Mergelėms sukaupti reikšmingą sumą ilgalaikiams tikslams."
-      ]
-    },
-    { 
-      name: "Svarstyklės", 
-      dateRange: "Rugsėjo 23 - Spalio 22",
-      image: "css/img/svarstykles.png",
-      descriptions: [
-        "Svarstyklės 2025 metais raus pusiausvyrą tarp asmeninio ir profesinio gyvenimo. Jūsų diplomatiniai gebėjimai bus ypač vertinami.",
-        "Meilės frontas Svarstyklėms 2025 metais žada įdomių pokyčių. Galite susipažinti su žmogumi, kuris pakeis jūsų gyvenimą.",
-        "2025 metai bus puikus metas Svarstyklėms plėsti socialinį ratą ir užmegzti naudingus kontaktus."
-      ]
-    },
-    { 
-      name: "Skorpionas", 
-      dateRange: "Spalio 23 - Lapkričio 21",
-      image: "css/img/skorpionas.png",
-      descriptions: [
-        "Skorpionų 2025 metų horoskopas skelbia transformaciją. Jūsų gyvenimas gali pasikeisti neatpažįstamai, bet į gerąją pusę.",
-        "2025 metai Skorpionams atneš vidinę jėgą ir atsparumą. Jūsų intuicija bus ypač aštrai išvystytą.",
-        "Finansinės galimybės 2025 metais bus susijusios su ilgalaikėmis investicijomis ar paveldėjimais."
-      ]
-    },
-    { 
-      name: "Šaulys", 
-      dateRange: "Lapkričio 22 - Gruodžio 21",
-      image: "css/img/saulys.png",
-      descriptions: [
-        "Šaulių 2025 metų horoskopas žada kelionių ir naujų patirčių. Jūsų optimizmas ir nuotykių troškimas bus atlyginti.",
-        "2025 metai Šauliams bus palankūs karjerai, ypač jei ji susijusi su užsienio ryšiais ar tarptautine veikla.",
-        "Asmeniniai santykiai 2025 metais taps gilesni. Galite atrasti tikrą dvasinį bendraminčį."
-      ]
-    },
-    { 
-      name: "Ožiaragis", 
-      dateRange: "Gruodžio 22 - Sausio 19",
-      image: "css/img/oziaragis.png",
-      descriptions: [
-        "Ožiaragių 2025 metų horoskopas skelbia karjeros viršūnes. Jūsų kantrybė ir atkaklumas pagaliau bus atlyginti.",
-        "2025 metai Ožiaragiams bus svarbūs šeimos požiūriu. Galite įgyti naują statusą - tapti tėvu ar seneliu.",
-        "Finansinė padėtis 2025 metais bus stabili, o kai kurie Ožiaragiai gali netikėtai pagerinti savo materialinę padėtį."
-      ]
-    },
-    { 
-      name: "Vandenis", 
-      dateRange: "Sausio 20 - Vasario 18",
-      image: "css/img/vandenis.png",
-      descriptions: [
-        "Vandenių 2025 metų horoskopas akcentuoja kūrybiškumą ir originalumą. Jūsų neįprastos idėjos sulauks pripažinimo.",
-        "2025 metai Vandeniui bus palankūs asmeniniam augimui. Išmoksite priimti save tokį, koks esate.",
-        "Socialinis gyvenimas 2025 metais bus ypač intensyvus. Galite tapti įtakingos grupės lyderiu ar įkvėpėju."
-      ]
-    },
-    { 
-      name: "Žuvys", 
-      dateRange: "Vasario 19 - Kovo 20",
-      image: "css/img/zuvys.png",
-      descriptions: [
-        "Žuvų 2025 metų horoskopas skelbia dvasišką atgimimą. Jūsų jautrumas ir empatija padės ne tik jums, bet ir kitiems.",
-        "2025 metai Žuvims bus palankūs meilei ir romantikai. Vienišos širdys gali netikėtai susirasti antrą pusę.",
-        "Kūrybinės veiklos 2025 metais atneš ne tik džiaugsmą, bet ir materialinę naudą. Nebijokite rodyti savo talento pasauliui."
-      ]
-    }
-  ];
+  <div class="main-wrapper">
+    <div class="ad-section">
+      <img src="css/img/iki_reklama.jpg" alt="IKI reklama" class="ad-image">
+    </div>
 
-  const history = [];
+    <div class="container">
+      <h1>Horoskopų Tikrinimas</h1>
 
-  document.getElementById('checkBtn').addEventListener('click', function() {
-    const birthDateInput = document.getElementById('birthDate');
-    const birthDate = new Date(birthDateInput.value);
+      <div class="input-section">
+        <input type="date" id="birthDate" placeholder="Įveskite gimimo datą">
+        <button id="checkBtn">Patikrinti horoskopą</button>
+      </div>
 
-    if (!birthDateInput.value) {
-      alert("Įveskite gimimo datą!");
-      return;
-    }
+      <div id="resultCard" class="result-card">
+        <h2 id="zodiacName"></h2>
+        <img id="zodiacImage" src="" alt="Zodiako ženklas" class="zodiac-image">
+        <div class="meaning-text" id="meaningText"></div>
+      </div>
 
-    checkHoroscope(birthDate);
-  });
+      <div class="history">
+        <h2>Ankstesni horoskopų patikrinimai</h2>
+        <div id="historyList"></div>
+      </div>
+    </div>
+  </div>
 
-  function checkHoroscope(date) {
-    const month = date.getMonth() + 1; // JavaScript months are 0-11
-    const day = date.getDate();
-    
-    let zodiacSign = null;
-    
-    // Determine zodiac sign based on date
-    if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) {
-      zodiacSign = zodiacSigns[0]; // Avinas
-    } else if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) {
-      zodiacSign = zodiacSigns[1]; // Jautis
-    } else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) {
-      zodiacSign = zodiacSigns[2]; // Dvyniai
-    } else if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) {
-      zodiacSign = zodiacSigns[3]; // Vėžys
-    } else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) {
-      zodiacSign = zodiacSigns[4]; // Liūtas
-    } else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) {
-      zodiacSign = zodiacSigns[5]; // Mergelė
-    } else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) {
-      zodiacSign = zodiacSigns[6]; // Svarstyklės
-    } else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) {
-      zodiacSign = zodiacSigns[7]; // Skorpionas
-    } else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) {
-      zodiacSign = zodiacSigns[8]; // Šaulys
-    } else if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) {
-      zodiacSign = zodiacSigns[9]; // Ožiaragis
-    } else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) {
-      zodiacSign = zodiacSigns[10]; // Vandenis
-    } else if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) {
-      zodiacSign = zodiacSigns[11]; // Žuvys
-    }
-    
-    if (!zodiacSign) {
-      alert("Nepavyko nustatyti zodiako ženklo!");
-      return;
-    }
-    
-    // Display the zodiac information
-    document.getElementById('zodiacName').textContent = `${zodiacSign.name} (${zodiacSign.dateRange})`;
-    document.getElementById('zodiacImage').src = zodiacSign.image;
-    document.getElementById('zodiacImage').alt = zodiacSign.name;
-    
-    // Get random description
-    const randomIndex = Math.floor(Math.random() * zodiacSign.descriptions.length);
-    document.getElementById('meaningText').innerHTML = `
-      <h3>Jūsų horoskopas 2025 metams:</h3>
-      <p>${zodiacSign.descriptions[randomIndex]}</p>
-      <p><em>${getRandomPrediction()}</em></p>
-    `;
-    
-    document.getElementById('resultCard').style.display = "block";
-
-    // Add to history
-    history.unshift({
-      zodiac: zodiacSign.name,
-      date: date.toLocaleDateString('lt-LT'),
-      description: zodiacSign.descriptions[randomIndex].substring(0, 50) + "..."
-    });
-
-    updateHistory();
-  }
-
-  function getRandomPrediction() {
-    const predictions = [
-      "Vasarą laukia netikėtas susitikimas, kuris gali pakeisti jūsų gyvenimą.",
-      "Rugsėjo mėnesį būkite ypač atidūs finansinėse operacijose.",
-      "Jūsų sveikata 2025 metais bus stipri, bet reikės atsargiai rinktis mitybą.",
-      "Nauji draugai atneš ne tik džiaugsmo, bet ir naudingų kontaktų.",
-      "Metų pabaigoje galite tikėtis malonaus siurprizo, susijusio su karjera.",
-      "Jūsų kūrybinės idėjos sulauks pripažinimo, ypač pavasarį.",
-      "Meilės frontas bus ypač aktyvus rudens mėnesiais.",
-      "Kelionė į naują vietą atvers akis į kitokį gyvenimo būdą.",
-      "Jūsų šeimoje gali atsirasti naujas narys - būkite pasiruošę!"
+  <script>
+    // Zodiac signs data
+    const zodiacSigns = [
+      {
+        name: "Avinas",
+        dateRange: "Kovo 21 - Balandžio 19",
+        image: "css/img/avinas.png",
+        descriptions: [
+          "2025 metai Avinui bus kupini energijos ir naujų pradžią. Jūsų drąsa ir iniciatyva bus ypač pastebimos pirmoje metų pusėje.",
+          "Avinų horoskopas 2025 metams numato sėkmę karjeroje. Nepaisykite skeptikų - jūsų idėjos yra genialios!",
+          "Meilės frontas Avinams 2025 metais atneš nemažai aistros. Galite netikėtai susidraugauti su senu pažįstamu."
+        ]
+      },
+      {
+        name: "Jautis",
+        dateRange: "Balandžio 20 - Gegužės 20",
+        image: "css/img/jautis.png",
+        descriptions: [
+          "Jaučių 2025 metų horoskopas skelbia finansinę stabilumą. Jūsų sunkūs darbai pagaliau atneš vaisių.",
+          "Jums, Jaučiams, 2025 metai bus kupini asmeninio augimo. Išmoksite priimti pokyčius kaip natūralų gyvenimo dalį.",
+          "Sveikatos klausimai Jaučiams 2025 metais reikalaus dėmesio. Nebijokite kreiptis pagalbos į specialistus."
+        ]
+      },
+      {
+        name: "Dvyniai",
+        dateRange: "Gegužės 21 - Birželio 20",
+        image: "css/img/dvyniai.png",
+        descriptions: [
+          "Dvynių 2025 metų horoskopas žada komunikacijos sėkmę. Jūsų socialiniai įgūdžiai atvers daug naujų durų.",
+          "Dvyniams 2025 metai bus ypač palankūs mokslui ir kelionėms. Neleiskite šanso praslysti pro pirštus!",
+          "Jūsų kūrybiškumas 2025 metais sieks viršūnių. Dvyniai turės galimybę realizuoti ilgai puoselėtus projektus."
+        ]
+      },
+      {
+        name: "Vėžys",
+        dateRange: "Birželio 21 - Liepos 22",
+        image: "css/img/vezys.png",
+        descriptions: [
+          "Vėžių horoskopas 2025 metams akcentuoja šeimos vertybes. Artimųjų pagalba bus nepakeičiama jūsų sėkmei.",
+          "2025 metai Vėžiams bus emocingi. Išmokite išreikšti savo jausmus, o ne juos slėpti.",
+          "Finansinė padėtis 2025 metais pagerės, ypač jei investuosite į nekilnojamąjį turtą ar šeimos verslą."
+        ]
+      },
+      {
+        name: "Liūtas",
+        dateRange: "Liepos 23 - Rugpjūčio 22",
+        image: "css/img/liutas.png",
+        descriptions: [
+          "Liūtų 2025 metų horoskopas skelbia karjeros šuolį. Jūsų lyderystės savybės bus pripažįstamos ir apdovanotos.",
+          "2025 metai Liūtams bus kupini romantikos. Vienišos širdys galiausiai ras savo antrą pusę.",
+          "Kūrybinės Liūtų energijos 2025 metais bus nepaprastai galingos. Tai puikus metas pradėti meno projektą."
+        ]
+      },
+      {
+        name: "Mergelė",
+        dateRange: "Rugpjūčio 23 - Rugsėjo 22",
+        image: "css/img/mergele.png",
+        descriptions: [
+          "Mergelių 2025 metų horoskopas žada sveikatos pagerėjimą. Jūsų kruopštumas sveikatos klausimais atneš vaisių.",
+          "2025 metai Mergelėms bus palankūs mokslui ir saviugdai. Įgytos žinios atneš ne tik džiaugsmą, bet ir naudą.",
+          "Finansinė disciplina 2025 metais leis Mergelėms sukaupti reikšmingą sumą ilgalaikiams tikslams."
+        ]
+      },
+      {
+        name: "Svarstyklės",
+        dateRange: "Rugsėjo 23 - Spalio 22",
+        image: "css/img/svarstykles.png",
+        descriptions: [
+          "Svarstyklės 2025 metais raus pusiausvyrą tarp asmeninio ir profesinio gyvenimo. Jūsų diplomatiniai gebėjimai bus ypač vertinami.",
+          "Meilės frontas Svarstyklėms 2025 metais žada įdomių pokyčių. Galite susipažinti su žmogumi, kuris pakeis jūsų gyvenimą.",
+          "2025 metai bus puikus metas Svarstyklėms plėsti socialinį ratą ir užmegzti naudingus kontaktus."
+        ]
+      },
+      {
+        name: "Skorpionas",
+        dateRange: "Spalio 23 - Lapkričio 21",
+        image: "css/img/skorpionas.png",
+        descriptions: [
+          "Skorpionų 2025 metų horoskopas skelbia transformaciją. Jūsų gyvenimas gali pasikeisti neatpažįstamai, bet į gerąją pusę.",
+          "2025 metai Skorpionams atneš vidinę jėgą ir atsparumą. Jūsų intuicija bus ypač aštrai išvystytą.",
+          "Finansinės galimybės 2025 metais bus susijusios su ilgalaikėmis investicijomis ar paveldėjimais."
+        ]
+      },
+      {
+        name: "Šaulys",
+        dateRange: "Lapkričio 22 - Gruodžio 21",
+        image: "css/img/saulys.png",
+        descriptions: [
+          "Šaulių 2025 metų horoskopas žada kelionių ir naujų patirčių. Jūsų optimizmas ir nuotykių troškimas bus atlyginti.",
+          "2025 metai Šauliams bus palankūs karjerai, ypač jei ji susijusi su užsienio ryšiais ar tarptautine veikla.",
+          "Asmeniniai santykiai 2025 metais taps gilesni. Galite atrasti tikrą dvasinį bendraminčį."
+        ]
+      },
+      {
+        name: "Ožiaragis",
+        dateRange: "Gruodžio 22 - Sausio 19",
+        image: "css/img/oziaragis.png",
+        descriptions: [
+          "Ožiaragių 2025 metų horoskopas skelbia karjeros viršūnes. Jūsų kantrybė ir atkaklumas pagaliau bus atlyginti.",
+          "2025 metai Ožiaragiams bus svarbūs šeimos požiūriu. Galite įgyti naują statusą - tapti tėvu ar seneliu.",
+          "Finansinė padėtis 2025 metais bus stabili, o kai kurie Ožiaragiai gali netikėtai pagerinti savo materialinę padėtį."
+        ]
+      },
+      {
+        name: "Vandenis",
+        dateRange: "Sausio 20 - Vasario 18",
+        image: "css/img/vandenis.png",
+        descriptions: [
+          "Vandenių 2025 metų horoskopas akcentuoja kūrybiškumą ir originalumą. Jūsų neįprastos idėjos sulauks pripažinimo.",
+          "2025 metai Vandeniui bus palankūs asmeniniam augimui. Išmoksite priimti save tokį, koks esate.",
+          "Socialinis gyvenimas 2025 metais bus ypač intensyvus. Galite tapti įtakingos grupės lyderiu ar įkvėpėju."
+        ]
+      },
+      {
+        name: "Žuvys",
+        dateRange: "Vasario 19 - Kovo 20",
+        image: "css/img/zuvys.png",
+        descriptions: [
+          "Žuvų 2025 metų horoskopas skelbia dvasišką atgimimą. Jūsų jautrumas ir empatija padės ne tik jums, bet ir kitiems.",
+          "2025 metai Žuvims bus palankūs meilei ir romantikai. Vienišos širdys gali netikėtai susirasti antrą pusę.",
+          "Kūrybinės veiklos 2025 metais atneš ne tik džiaugsmą, bet ir materialinę naudą. Nebijokite rodyti savo talento pasauliui."
+        ]
+      }
     ];
-    
-    return predictions[Math.floor(Math.random() * predictions.length)];
-  }
 
-  function updateHistory() {
-    const historyList = document.getElementById('historyList');
-    historyList.innerHTML = "";
+    const history = [];
+    let karmaPoints = 0;
 
-    // Show only last 5 items
-    const displayItems = history.slice(0, 5);
+    // Karma system functions
+    function addKarmaPoints(event, points) {
+      const buttonRect = event.target.getBoundingClientRect();
+      const karmaDisplay = document.querySelector('.karma-badge');
+      const karmaDisplayRect = karmaDisplay.getBoundingClientRect();
 
-    displayItems.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'history-item';
-      div.innerHTML = `
-        <span><strong>${item.zodiac}</strong> (${item.date})</span>
-        <span>${item.description}</span>
-      `;
-      historyList.appendChild(div);
+      // Calculate start position (button center)
+      const startX = buttonRect.left + buttonRect.width / 2;
+      const startY = buttonRect.top + buttonRect.height / 2;
+
+      // Calculate end position (karma display center)
+      const endX = karmaDisplayRect.left + karmaDisplayRect.width / 2 - startX;
+      const endY = karmaDisplayRect.top + karmaDisplayRect.height / 2 - startY;
+
+      // Create animation element
+      const karmaAnim = document.createElement('div');
+      karmaAnim.className = 'karma-animation';
+      karmaAnim.textContent = `+${points}`;
+      karmaAnim.style.setProperty('--start-x', '0px');
+      karmaAnim.style.setProperty('--start-y', '0px');
+      karmaAnim.style.setProperty('--end-x', `${endX}px`);
+      karmaAnim.style.setProperty('--end-y', `${endY}px`);
+      karmaAnim.style.left = `${startX}px`;
+      karmaAnim.style.top = `${startY}px`;
+
+      document.body.appendChild(karmaAnim);
+
+      // Update karma points after a short delay
+      setTimeout(() => {
+        karmaPoints += points;
+        document.getElementById('karma-points').textContent = karmaPoints;
+
+        // Remove animation element after animation completes
+        setTimeout(() => {
+          karmaAnim.remove();
+        }, 1500);
+      }, 300);
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', function (e) {
+      const birthDateInput = document.getElementById('birthDate');
+      const birthDate = new Date(birthDateInput.value);
+
+      if (!birthDateInput.value) {
+        alert("Įveskite gimimo datą!");
+        return;
+      }
+
+      // Add karma points when checking horoscope
+      addKarmaPoints(e, 20);
+
+      checkHoroscope(birthDate);
     });
-  }
-</script>
+
+    function checkHoroscope(date) {
+      const month = date.getMonth() + 1; // JavaScript months are 0-11
+      const day = date.getDate();
+
+      let zodiacSign = null;
+
+      // Determine zodiac sign based on date
+      if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) {
+        zodiacSign = zodiacSigns[0]; // Avinas
+      } else if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) {
+        zodiacSign = zodiacSigns[1]; // Jautis
+      } else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) {
+        zodiacSign = zodiacSigns[2]; // Dvyniai
+      } else if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) {
+        zodiacSign = zodiacSigns[3]; // Vėžys
+      } else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) {
+        zodiacSign = zodiacSigns[4]; // Liūtas
+      } else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) {
+        zodiacSign = zodiacSigns[5]; // Mergelė
+      } else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) {
+        zodiacSign = zodiacSigns[6]; // Svarstyklės
+      } else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) {
+        zodiacSign = zodiacSigns[7]; // Skorpionas
+      } else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) {
+        zodiacSign = zodiacSigns[8]; // Šaulys
+      } else if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) {
+        zodiacSign = zodiacSigns[9]; // Ožiaragis
+      } else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) {
+        zodiacSign = zodiacSigns[10]; // Vandenis
+      } else if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) {
+        zodiacSign = zodiacSigns[11]; // Žuvys
+      }
+
+      if (!zodiacSign) {
+        alert("Nepavyko nustatyti zodiako ženklo!");
+        return;
+      }
+
+      // Display the zodiac information
+      document.getElementById('zodiacName').textContent = `${zodiacSign.name} (${zodiacSign.dateRange})`;
+      document.getElementById('zodiacImage').src = zodiacSign.image;
+      document.getElementById('zodiacImage').alt = zodiacSign.name;
+
+      // Get random description
+      const randomIndex = Math.floor(Math.random() * zodiacSign.descriptions.length);
+      document.getElementById('meaningText').innerHTML = `
+        <h3>Jūsų horoskopas 2025 metams:</h3>
+        <p>${zodiacSign.descriptions[randomIndex]}</p>
+        <p><em>${getRandomPrediction()}</em></p>
+      `;
+
+      document.getElementById('resultCard').style.display = "block";
+
+      // Add to history
+      history.unshift({
+        zodiac: zodiacSign.name,
+        date: date.toLocaleDateString('lt-LT'),
+        description: zodiacSign.descriptions[randomIndex].substring(0, 50) + "..."
+      });
+
+      updateHistory();
+    }
+
+    function getRandomPrediction() {
+      const predictions = [
+        "Vasarą laukia netikėtas susitikimas, kuris gali pakeisti jūsų gyvenimą.",
+        "Rugsėjo mėnesį būkite ypač atidūs finansinėse operacijose.",
+        "Jūsų sveikata 2025 metais bus stipri, bet reikės atsargiai rinktis mitybą.",
+        "Nauji draugai atneš ne tik džiaugsmo, bet ir naudingų kontaktų.",
+        "Metų pabaigoje galite tikėtis malonaus siurprizo, susijusio su karjera.",
+        "Jūsų kūrybinės idėjos sulauks pripažinimo, ypač pavasarį.",
+        "Meilės frontas bus ypač aktyvus rudens mėnesiais.",
+        "Kelionė į naują vietą atvers akis į kitokį gyvenimo būdą.",
+        "Jūsų šeimoje gali atsirasti naujas narys - būkite pasiruošę!"
+      ];
+
+      return predictions[Math.floor(Math.random() * predictions.length)];
+    }
+
+    function updateHistory() {
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = "";
+
+      // Show only last 5 items
+      const displayItems = history.slice(0, 5);
+
+      displayItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+          <span><strong>${item.zodiac}</strong> (${item.date})</span>
+          <span>${item.description}</span>
+        `;
+        historyList.appendChild(div);
+      });
+    }
+  </script>
 </body>
 </html>

@@ -2,19 +2,79 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ženklų suderinamumas</title>
   <style>
     body {
       background-color: #322E39;
       font-family: 'Segoe UI', sans-serif;
       color: white;
+      margin: 0;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    .karma-container {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .karma-points {
+      font-size: 18px;
+      font-weight: bold;
+      color: #9B507B;
+    }
+
+    .karma-badge {
+      background-color: rgba(155, 80, 123, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .karma-animation {
+      position: fixed;
+      color: #9B507B;
+      font-weight: bold;
+      font-size: 18px;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      animation: karmaFlow 1.5s ease-out forwards;
+    }
+
+    @keyframes karmaFlow {
+      0% {
+        transform: translate(var(--start-x), var(--start-y));
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--end-x), var(--end-y));
+        opacity: 0;
+      }
+    }
+
+    .content {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+      height: calc(100vh - 80px);
     }
 
     h1 {
@@ -43,15 +103,16 @@
       margin-top: 20px;
     }
 
-    .main-button:hover {
-      background-color: #C8ACA5;
-      color: #322E39;
-    }
+      .main-button:hover {
+        background-color: #C8ACA5;
+        color: #322E39;
+      }
 
     @keyframes glow {
       from {
         box-shadow: 0 0 10px #9B507B, 0 0 20px #9B507B;
       }
+
       to {
         box-shadow: 0 0 20px #C8ACA5, 0 0 30px #C8ACA5;
       }
@@ -95,74 +156,125 @@
       transition: opacity 1s ease;
     }
 
-    #result.visible {
-      opacity: 1;
-    }
+      #result.visible {
+        opacity: 1;
+      }
   </style>
 </head>
 <body>
 
-<h1>Ženklų suderinamumas</h1>
+  <div class="header-container">
+    <h1>Ženklų suderinamumas</h1>
+    <div class="karma-container">
+      <div class="karma-badge">
+        <span>Karma:</span>
+        <span class="karma-points" id="karma-points">0</span>
+      </div>
+    </div>
+  </div>
 
-<div>
-  <input type="text" placeholder="Tavo ženklas" id="sign1">
-  <input type="text" placeholder="Partnerio ženklas" id="sign2">
-</div>
+  <div class="content">
+    <div>
+      <input type="text" placeholder="Tavo ženklas" id="sign1">
+      <input type="text" placeholder="Partnerio ženklas" id="sign2">
+    </div>
 
-<!-- Magical glowing button -->
-<button class="main-button" onclick="checkCompatibility()">🔮 Patikrinti suderinamumą</button>
+    <!-- Magical glowing button -->
+    <button class="main-button" onclick="checkCompatibility(event)">🔮 Patikrinti suderinamumą</button>
 
-<div id="result"></div>
+    <div id="result"></div>
 
-<!-- Separated hover-revealed return button -->
-<div class="return-container" onmouseenter="showReturnButton()" onmouseleave="scheduleHideReturnButton()">
-  <span style="color: #C8ACA5;">Užveskite čia norėdami grįžti:</span>
-  <button id="return-button" class="return-button" onclick="location.href='Pagrindinis_puslapis.html'">Eiti į pagrindinį puslapį</button>
-</div>
+    <!-- Separated hover-revealed return button -->
+    <div class="return-container" onmouseenter="showReturnButton()" onmouseleave="scheduleHideReturnButton()">
+      <span style="color: #C8ACA5;">Užveskite čia norėdami grįžti:</span>
+      <button id="return-button" class="return-button" onclick="location.href='Pagrindinis_puslapis.html'">Eiti į pagrindinį puslapį</button>
+    </div>
+  </div>
 
+  <script>
+    let karmaPoints = 0;
 
-<script>
-  function checkCompatibility() {
-    const sign1 = document.getElementById('sign1').value.trim();
-    const sign2 = document.getElementById('sign2').value.trim();
-    const resultEl = document.getElementById('result');
+    function addKarmaPoints(event, points) {
+      const buttonRect = event.target.getBoundingClientRect();
+      const karmaDisplay = document.querySelector('.karma-badge');
+      const karmaDisplayRect = karmaDisplay.getBoundingClientRect();
 
-    if (!sign1 || !sign2) {
-      resultEl.textContent = "Prašome įvesti abu ženklus.";
-      resultEl.classList.add("visible");
-      return;
+      // Calculate start position (button center)
+      const startX = buttonRect.left + buttonRect.width / 2;
+      const startY = buttonRect.top + buttonRect.height / 2;
+
+      // Calculate end position (karma display center)
+      const endX = karmaDisplayRect.left + karmaDisplayRect.width / 2 - startX;
+      const endY = karmaDisplayRect.top + karmaDisplayRect.height / 2 - startY;
+
+      // Create animation element
+      const karmaAnim = document.createElement('div');
+      karmaAnim.className = 'karma-animation';
+      karmaAnim.textContent = `+${points}`;
+      karmaAnim.style.setProperty('--start-x', '0px');
+      karmaAnim.style.setProperty('--start-y', '0px');
+      karmaAnim.style.setProperty('--end-x', `${endX}px`);
+      karmaAnim.style.setProperty('--end-y', `${endY}px`);
+      karmaAnim.style.left = `${startX}px`;
+      karmaAnim.style.top = `${startY}px`;
+
+      document.body.appendChild(karmaAnim);
+
+      // Update karma points after a short delay
+      setTimeout(() => {
+        karmaPoints += points;
+        document.getElementById('karma-points').textContent = karmaPoints;
+
+        // Remove animation element after animation completes
+        setTimeout(() => {
+          karmaAnim.remove();
+        }, 1500);
+      }, 300);
     }
 
-    const messages = [
-      `💖 ${sign1} ir ${sign2} – ypatingas ryšys kupinas aistros ir žavesio!`,
-      `🔮 ${sign1} ir ${sign2} – paslaptinga, bet harmoninga sąjunga. Žvaigždės palankios!`,
-      `⚡️ ${sign1} ir ${sign2} gali susidurti su iššūkiais, bet truputis magijos gali padėti!`
-    ];
+    function checkCompatibility(event) {
+      const sign1 = document.getElementById('sign1').value.trim();
+      const sign2 = document.getElementById('sign2').value.trim();
+      const resultEl = document.getElementById('result');
 
-    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      if (!sign1 || !sign2) {
+        resultEl.textContent = "Prašome įvesti abu ženklus.";
+        resultEl.classList.add("visible");
+        return;
+      }
 
-    resultEl.textContent = randomMsg;
-    resultEl.classList.remove("visible"); // reset
-    void resultEl.offsetWidth; // force reflow
-    resultEl.classList.add("visible");
-  }
+      // Add karma points with animation
+      addKarmaPoints(event, 15);
 
-  let hideTimeout;
+      const messages = [
+        `💖 ${sign1} ir ${sign2} – ypatingas ryšys kupinas aistros ir žavesio!`,
+        `🔮 ${sign1} ir ${sign2} – paslaptinga, bet harmoninga sąjunga. Žvaigždės palankios!`,
+        `⚡️ ${sign1} ir ${sign2} gali susidurti su iššūkiais, bet truputis magijos gali padėti!`
+      ];
 
-  function showReturnButton() {
-    clearTimeout(hideTimeout);
-    document.getElementById('return-button').style.opacity = '1';
-    document.getElementById('return-button').style.pointerEvents = 'auto';
-  }
+      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
-  function scheduleHideReturnButton() {
-    hideTimeout = setTimeout(() => {
-      document.getElementById('return-button').style.opacity = '0';
-      document.getElementById('return-button').style.pointerEvents = 'none';
-    }, 1500); // stay visible for 1.5 seconds after mouse leaves
-  }
+      resultEl.textContent = randomMsg;
+      resultEl.classList.remove("visible"); // reset
+      void resultEl.offsetWidth; // force reflow
+      resultEl.classList.add("visible");
+    }
 
-</script>
+    let hideTimeout;
+
+    function showReturnButton() {
+      clearTimeout(hideTimeout);
+      document.getElementById('return-button').style.opacity = '1';
+      document.getElementById('return-button').style.pointerEvents = 'auto';
+    }
+
+    function scheduleHideReturnButton() {
+      hideTimeout = setTimeout(() => {
+        document.getElementById('return-button').style.opacity = '0';
+        document.getElementById('return-button').style.pointerEvents = 'none';
+      }, 1500); // stay visible for 1.5 seconds after mouse leaves
+    }
+  </script>
 
 </body>
 </html>

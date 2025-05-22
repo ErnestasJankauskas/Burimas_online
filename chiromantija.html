@@ -2,7 +2,7 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chiromantija</title>
   <style>
     body {
@@ -12,6 +12,8 @@
       background-color: #0b0b0f;
       color: #e8dbc5;
       text-align: center;
+      position: relative;
+      min-height: 100vh;
     }
 
     h1 {
@@ -52,10 +54,10 @@
       transition: opacity 0.6s ease;
     }
 
-    #analyze-btn:hover {
-      background-color: #C8ACA5;
-      color: #322E39;
-    }
+      #analyze-btn:hover {
+        background-color: #C8ACA5;
+        color: #322E39;
+      }
 
     #result {
       margin-top: 2rem;
@@ -80,81 +82,182 @@
       cursor: pointer;
     }
 
-    #secret-btn:hover {
-      background-color: #C8ACA5;
-      color: #0b0b0f;
+      #secret-btn:hover {
+        background-color: #C8ACA5;
+        color: #0b0b0f;
+      }
+
+    /* Karma system styles */
+    .karma-container {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .karma-points {
+      font-size: 18px;
+      font-weight: bold;
+      color: #9B507B;
+    }
+
+    .karma-badge {
+      background-color: rgba(155, 80, 123, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .karma-animation {
+      position: fixed;
+      color: #9B507B;
+      font-weight: bold;
+      font-size: 18px;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      animation: karmaFlow 1.5s ease-out forwards;
+    }
+
+    @keyframes karmaFlow {
+      0% {
+        transform: translate(var(--start-x), var(--start-y));
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--end-x), var(--end-y));
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-<h1>Chiromantija</h1>
+  <!-- Karma System -->
+  <div class="karma-container">
+    <div class="karma-badge">
+      <span>Karma:</span>
+      <span class="karma-points" id="karma-points">0</span>
+    </div>
+  </div>
 
-<input type="file" accept="image/*" id="image-upload">
-<img id="preview" style="display:none" />
+  <h1>Chiromantija</h1>
 
-<button id="analyze-btn">Nuskaityti Delną</button>
+  <input type="file" accept="image/*" id="image-upload">
+  <img id="preview" style="display:none" />
 
-<div id="result"></div>
+  <button id="analyze-btn">Nuskaityti Delną</button>
 
-<button id="secret-btn">Paslaptingas Pranašavimas</button>
+  <div id="result"></div>
 
-<script>
-  const upload = document.getElementById('image-upload');
-  const preview = document.getElementById('preview');
-  const analyzeBtn = document.getElementById('analyze-btn');
-  const result = document.getElementById('result');
-  const secretBtn = document.getElementById('secret-btn');
+  <button id="secret-btn">Paslaptingas Pranašavimas</button>
 
-  const predictions = [
-    "Tavo likimo linija rodo neišvengiamą sėkmę — svarbu pasitikėti intuicija.",
-    "Širdies linija išduoda gilų emocinį pasaulį — tikros meilės ženklas netoliese.",
-    "Gyvybės linija rodo atkaklumą — nors kelias vingiuotas, tu pasieksi daugiau nei tikiesi."
-  ];
+  <script>
+    const upload = document.getElementById('image-upload');
+    const preview = document.getElementById('preview');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const result = document.getElementById('result');
+    const secretBtn = document.getElementById('secret-btn');
 
-  const secretMessages = [
-    "Tavo delnas slepia seną sielą — esi išminties nešėjas iš praeitų gyvenimų.",
-    "Slapta linija rodo, kad tavo likimas susietas su žmogumi, kurio dar nepažįsti.",
-    "Delno ženklas įspėja — artėja svarbus pasirinkimas, kuris pakeis tavo kelią."
-  ];
+    const predictions = [
+      "Tavo likimo linija rodo neišvengiamą sėkmę — svarbu pasitikėti intuicija.",
+      "Širdies linija išduoda gilų emocinį pasaulį — tikros meilės ženklas netoliese.",
+      "Gyvybės linija rodo atkaklumą — nors kelias vingiuotas, tu pasieksi daugiau nei tikiesi."
+    ];
 
-  let clickCount = 0;
+    const secretMessages = [
+      "Tavo delnas slepia seną sielą — esi išminties nešėjas iš praeitų gyvenimų.",
+      "Slapta linija rodo, kad tavo likimas susietas su žmogumi, kurio dar nepažįsti.",
+      "Delno ženklas įspėja — artėja svarbus pasirinkimas, kuris pakeis tavo kelią."
+    ];
 
-  upload.onchange = () => {
-    const file = upload.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-        analyzeBtn.style.opacity = '1';
-        analyzeBtn.style.pointerEvents = 'auto';
-        result.innerHTML = '';
-        secretBtn.style.display = 'none';
-        clickCount = 0;
-      };
-      reader.readAsDataURL(file);
+    let clickCount = 0;
+    let karmaPoints = 0;
+
+    // Karma system functions
+    function addKarmaPoints(event, points) {
+      const buttonRect = event.target.getBoundingClientRect();
+      const karmaDisplay = document.querySelector('.karma-badge');
+      const karmaDisplayRect = karmaDisplay.getBoundingClientRect();
+
+      // Calculate start position (button center)
+      const startX = buttonRect.left + buttonRect.width / 2;
+      const startY = buttonRect.top + buttonRect.height / 2;
+
+      // Calculate end position (karma display center)
+      const endX = karmaDisplayRect.left + karmaDisplayRect.width / 2 - startX;
+      const endY = karmaDisplayRect.top + karmaDisplayRect.height / 2 - startY;
+
+      // Create animation element
+      const karmaAnim = document.createElement('div');
+      karmaAnim.className = 'karma-animation';
+      karmaAnim.textContent = `+${points}`;
+      karmaAnim.style.setProperty('--start-x', '0px');
+      karmaAnim.style.setProperty('--start-y', '0px');
+      karmaAnim.style.setProperty('--end-x', `${endX}px`);
+      karmaAnim.style.setProperty('--end-y', `${endY}px`);
+      karmaAnim.style.left = `${startX}px`;
+      karmaAnim.style.top = `${startY}px`;
+
+      document.body.appendChild(karmaAnim);
+
+      // Update karma points after a short delay
+      setTimeout(() => {
+        karmaPoints += points;
+        document.getElementById('karma-points').textContent = karmaPoints;
+
+        // Remove animation element after animation completes
+        setTimeout(() => {
+          karmaAnim.remove();
+        }, 1500);
+      }, 300);
     }
-  };
 
-  preview.onclick = () => {
-    clickCount++;
-    if (clickCount === 2) {
-      secretBtn.style.display = 'inline-block';
-    }
-  };
+    upload.onchange = () => {
+      const file = upload.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          analyzeBtn.style.opacity = '1';
+          analyzeBtn.style.pointerEvents = 'auto';
+          result.innerHTML = '';
+          secretBtn.style.display = 'none';
+          clickCount = 0;
+        };
+        reader.readAsDataURL(file);
+      }
+    };
 
-  analyzeBtn.onclick = () => {
-    const message = predictions[Math.floor(Math.random() * predictions.length)];
-    result.innerHTML = `<strong>Chiromantijos rezultatas:</strong><br>${message}`;
-  };
+    preview.onclick = () => {
+      clickCount++;
+      if (clickCount === 2) {
+        secretBtn.style.display = 'inline-block';
+      }
+    };
 
-  secretBtn.onclick = () => {
-    const msg = secretMessages[Math.floor(Math.random() * secretMessages.length)];
-    alert("🔮 Slaptas chiromantinis ženklas:\n\n" + msg);
-  };
-</script>
+    analyzeBtn.onclick = (e) => {
+      const message = predictions[Math.floor(Math.random() * predictions.length)];
+      result.innerHTML = `<strong>Chiromantijos rezultatas:</strong><br>${message}`;
+
+      // Add karma points when analyzing
+      addKarmaPoints(e, 15);
+    };
+
+    secretBtn.onclick = (e) => {
+      const msg = secretMessages[Math.floor(Math.random() * secretMessages.length)];
+      alert("🔮 Slaptas chiromantinis ženklas:\n\n" + msg);
+
+      // Add karma points for secret message
+      addKarmaPoints(e, 25);
+    };
+  </script>
 
 </body>
 </html>
-
