@@ -111,7 +111,6 @@
   const guestButton = document.getElementById('guestButton');
   const errorMessage = document.getElementById('errorMessage');
 
-  // Tikriname prisijungimo duomenis
   loginForm.addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -123,9 +122,10 @@
     } else if (username === 'admin' && password === '1234') {
       window.location.href = 'admin.html';
     } else {
-      errorMessage.style.display = 'block';
+      window.location.href = 'Pagrindinis_puslapis.html'; // jei neteisingi duomenys
     }
   });
+
 
   guestButton.addEventListener('click', function() {
     window.location.href = 'Pagrindinis_puslapis_Guest.html';
